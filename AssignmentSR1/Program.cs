@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FancyInternetDataAcquisition
+namespace IsolatedWordRecognitionApplication
 {
     static class Program
     {
@@ -16,7 +15,7 @@ namespace FancyInternetDataAcquisition
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new IDA1());
+            Application.Run(new SR1());
         }
     }
 }

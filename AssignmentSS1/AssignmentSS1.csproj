@@ -1,21 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{869E4EE7-E221-4848-8D88-4CD5F46DDA88}</ProjectGuid>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C853E3D8-847A-453E-AAD5-4A0C7924AB13}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgentApplication</RootNamespace>
-    <AssemblyName>AgentApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <RootNamespace>FormatSpeechDemo</RootNamespace>
+    <AssemblyName>FormatSpeechDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,8 +23,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,21 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AgentLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\AgentLibrary\bin\Debug\AgentLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="AuxiliaryLibrary">
-      <HintPath>..\..\DLLs\AuxiliaryLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="CommunicationLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\AgentLibrary\bin\Debug\CommunicationLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomUserControlsLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DLLs\CustomUserControlsLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,21 +41,21 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DI1.cs">
+    <Compile Include="SS1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DI1.Designer.cs">
-      <DependentUpon>DI1.cs</DependentUpon>
+    <Compile Include="SS1.Designer.cs">
+      <DependentUpon>SS1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChristmasAgent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DI1.resx">
-      <DependentUpon>DI1.cs</DependentUpon>
+    <EmbeddedResource Include="SS1.resx">
+      <DependentUpon>SS1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -93,9 +77,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\ObjectSerializerLibrary\ObjectSerializerLibrary.csproj">
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\AudioLibrary\AudioLibrary.csproj">
+      <Project>{1253f8f6-fadd-478b-98fb-2faaf5e95d2c}</Project>
+      <Name>AudioLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\ObjectSerializerLibrary\ObjectSerializerLibrary.csproj">
       <Project>{b27a4215-2ac9-4db2-8f7f-e68de3109e23}</Project>
       <Name>ObjectSerializerLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\SpeechSynthesisLibrary\SpeechSynthesisLibrary.csproj">
+      <Project>{e1ce5314-26e5-440a-9ad4-08f6b6ef08d6}</Project>
+      <Name>SpeechSynthesisLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

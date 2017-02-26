@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{869E4EE7-E221-4848-8D88-4CD5F46DDA88}</ProjectGuid>
+    <ProjectGuid>{8DBC0102-E1C6-45DF-9E07-7DACCB589576}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgentApplication</RootNamespace>
-    <AssemblyName>AgentApplication</AssemblyName>
+    <RootNamespace>IsolatedWordRecognitionApplication</RootNamespace>
+    <AssemblyName>IsolatedWordRecognitionApplication</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -34,17 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AgentLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\AgentLibrary\bin\Debug\AgentLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="AuxiliaryLibrary">
-      <HintPath>..\..\DLLs\AuxiliaryLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="CommunicationLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Libraries\AgentLibrary\bin\Debug\CommunicationLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="CustomUserControlsLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\DLLs\CustomUserControlsLibrary.dll</HintPath>
@@ -61,17 +50,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DI1.cs">
+    <Compile Include="AddWordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DI1.Designer.cs">
-      <DependentUpon>DI1.cs</DependentUpon>
+    <Compile Include="AddWordDialog.Designer.cs">
+      <DependentUpon>AddWordDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChristmasAgent.cs" />
+    <Compile Include="EAForISR.cs" />
+    <Compile Include="SR1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SR1.Designer.cs">
+      <DependentUpon>SR1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="DI1.resx">
-      <DependentUpon>DI1.cs</DependentUpon>
+    <EmbeddedResource Include="AddWordDialog.resx">
+      <DependentUpon>AddWordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SR1.resx">
+      <DependentUpon>SR1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -93,9 +91,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Libraries\ObjectSerializerLibrary\ObjectSerializerLibrary.csproj">
-      <Project>{b27a4215-2ac9-4db2-8f7f-e68de3109e23}</Project>
+    <ProjectReference Include="..\..\Libraries\AudioLibrary\AudioLibrary.csproj">
+      <Project>{1253F8F6-FADD-478B-98FB-2FAAF5E95D2C}</Project>
+      <Name>AudioLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\ObjectSerializerLibrary\ObjectSerializerLibrary.csproj">
+      <Project>{B27A4215-2AC9-4DB2-8F7F-E68DE3109E23}</Project>
       <Name>ObjectSerializerLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\PlotLibrary\PlotLibrary.csproj">
+      <Project>{26AD9F3F-489B-4FC8-9A21-4513703647A7}</Project>
+      <Name>PlotLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\SpeechRecognitionLibrary\SpeechRecognitionLibrary.csproj">
+      <Project>{022E54EB-5E90-46BC-B2E8-A255A3F340DA}</Project>
+      <Name>SpeechRecognitionLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

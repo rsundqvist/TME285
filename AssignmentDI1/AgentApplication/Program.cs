@@ -15,7 +15,7 @@ namespace AgentApplication
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AgentMainForm());
+            Application.Run(new DI1());
         }
     }
 }

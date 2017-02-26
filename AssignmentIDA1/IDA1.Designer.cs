@@ -1,6 +1,6 @@
 ﻿namespace FancyInternetDataAcquisition
 {
-    partial class MainForm
+    partial class IDA1
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IDA1));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.newsTab = new System.Windows.Forms.TabPage();
             this.refreshButton = new System.Windows.Forms.Button();

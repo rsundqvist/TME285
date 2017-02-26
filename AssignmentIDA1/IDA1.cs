@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace FancyInternetDataAcquisition
 {
-    public partial class MainForm : Form
+    public partial class IDA1 : Form
     {
         #region fields
         private DateTimeOffset lastPublishDate; //Shared
@@ -19,7 +19,7 @@ namespace FancyInternetDataAcquisition
         #endregion
 
         #region constructor
-        public MainForm()
+        public IDA1()
         {
             InitializeComponent();
             updateSetup();

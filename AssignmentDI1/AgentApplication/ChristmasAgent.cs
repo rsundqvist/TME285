@@ -14,11 +14,10 @@ namespace AgentApplication
         public ChristmasAgent()
         {
             Name = "ChristmasAgent";
-            Intro();
-            //Intro2();
+            Setup();
         }
 
-        private void Intro()
+        private void Setup()
         {
             DialogueProcess openingDialogue = new DialogueProcess();
             openingDialogue.Name = "openingDialogue";
@@ -64,13 +63,56 @@ namespace AgentApplication
 
             ResponseAction ra_good = new ResponseAction();
             christmasInquiryStartItem.ActionList.Add(ra_good);
-            ra_good.BrainProcessToDeactivate = openingDialogue.Name;
+            ra_good.BrainProcessToDeactivate = christmasDialogue.Name;
             ra_good.InputList.Add("Good");
             ra_good.InputList.Add("Alright");
             ra_good.InputList.Add("Great");
             ra_good.OutputList.Add("I'm very happy to hear that!");
             ra_good.OutputList.Add("Good for you!");
             ra_good.OutputList.Add("Lovely!");
+
+            DialogueProcess goodChristmasDialogue = new DialogueProcess();
+            goodChristmasDialogue.Name = "goodChristmasDialogue";
+            goodChristmasDialogue.ActiveOnStartup = false;
+            goodChristmasDialogue.SetOwnerAgent(this);
+            BrainProcessList.Add(goodChristmasDialogue);
+            ra_good.BrainProcessToActivate = goodChristmasDialogue.Name;
+
+            InteractionItem goodChristmasItem = new InteractionItem();
+            goodChristmasDialogue.ItemList.Add(goodChristmasItem);
+            goodChristmasItem.Name = "goodChristmasItem";
+            ra_good.TargetDialogueItemName = goodChristmasItem.Name;
+            goodChristmasItem.MillisecondDelay = 500;
+            OutputAction anythingElse = new OutputAction();
+            anythingElse.OutputList.Add("Did you want to talk about anything else?");
+            anythingElse.OutputList.Add("Anything else on your mind?");
+            anythingElse.BrainProcessToDeactivate = christmasDialogue.Name;
+            goodChristmasItem.ActionList.Add(anythingElse);
+
+            InteractionItem goodChristmasResponseItem = new InteractionItem();
+            goodChristmasResponseItem.Name = "goodChristmasResponseItem";
+            goodChristmasDialogue.ItemList.Add(goodChristmasResponseItem);
+            anythingElse.TargetDialogueItemName = goodChristmasResponseItem.Name;
+
+            ResponseAction nothingElse = new ResponseAction();
+            nothingElse.InputList.Add("No");
+            nothingElse.InputList.Add("That's not it");
+            nothingElse.InputList.Add("Nope");
+            nothingElse.OutputList.Add("Ok, see you later!");
+            nothingElse.OutputList.Add("Good.");
+            nothingElse.OutputList.Add("Good bye!");
+            goodChristmasResponseItem.ActionList.Add(nothingElse);
+
+            ResponseAction somethingElse = new ResponseAction();
+            somethingElse.InputList.Add("Yes");
+            somethingElse.InputList.Add("Yeah");
+            somethingElse.InputList.Add("Aye");
+            somethingElse.OutputList.Add("*Crickets*");
+            somethingElse.OutputList.Add("Tell it to someone else.");
+            somethingElse.OutputList.Add("I don't want to hear it.");
+            goodChristmasResponseItem.ActionList.Add(somethingElse);
+
+
             //Branch end
 
             ResponseAction ra_bad = new ResponseAction();
@@ -87,18 +129,16 @@ namespace AgentApplication
                 ra_bad.OutputList.Add("I'm sorry to hear that, next year will be better.");
                 ra_bad.OutputList.Add("Ooh a new UDP packet, gotta go!");
                 ra_bad.OutputList.Add("It can't have been that bad...");
-
-                //ra_bad.BrainProcessToActivate = openingDialogue.Name;
             }
             else
             {
                 ra_bad.OutputList.Add("Were you unhappy with your presents?");
                 ra_bad.OutputList.Add("Were you disappointed with your presents?");
-                
+
                 DialogueProcess presentsDialogue = new DialogueProcess();
                 presentsDialogue.Name = "presentsDialogue";
                 presentsDialogue.ActiveOnStartup = false;
-                BrainProcessList.Add(presentsDialogue); //TODO must add to list, looks the same in working memory window
+                BrainProcessList.Add(presentsDialogue); //MUST add to list, will show in memory regardless though
                 ra_bad.BrainProcessToActivate = presentsDialogue.Name;
 
                 InteractionItem presentsItem = new InteractionItem();
@@ -111,7 +151,7 @@ namespace AgentApplication
                 ra_good_presents.InputList.Add("That's not it");
                 ra_good_presents.InputList.Add("Nope");
                 ra_good_presents.OutputList.Add("Alright, let's talk later.");
-                ra_good_presents.OutputList.Add("What. Everrr.");
+                ra_good_presents.OutputList.Add("I give up.");
                 ra_good_presents.OutputList.Add("Ooh a new UDP packet!");
                 //Branch end
 
@@ -134,7 +174,7 @@ namespace AgentApplication
                 enemiesAction.InputList.Add("Yes");
                 enemiesAction.InputList.Add("Yes, and their pets");
                 enemiesAction.OutputList.Add("They've been added to your list of mortal enemies.");
-                
+
                 /*
                 MemoryAccessItem readEnemyItem = new MemoryAccessItem();
                 readEnemyItem.Name = "mai";

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FancyInternetDataAcquisition
+namespace FaceRecognitionApplication
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace FancyInternetDataAcquisition
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new IDA1());
+            Application.Run(new IP1());
         }
     }
 }

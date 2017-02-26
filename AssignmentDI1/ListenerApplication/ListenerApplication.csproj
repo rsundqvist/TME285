@@ -81,7 +81,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\SpeechRecognitionLibrary\SpeechRecognitionLibrary.csproj">
+    <ProjectReference Include="..\..\..\Libraries\SpeechRecognitionLibrary\SpeechRecognitionLibrary.csproj">
       <Project>{022E54EB-5E90-46BC-B2E8-A255A3F340DA}</Project>
       <Name>SpeechRecognitionLibrary</Name>
     </ProjectReference>
