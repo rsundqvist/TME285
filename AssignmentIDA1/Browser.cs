@@ -8,13 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SundqvistRichardSolution
+namespace FancyInternetDataAcquisition
 {
-    public partial class Form1 : Form
+    public partial class Browser : Form
     {
-        public Form1()
+        public Browser()
         {
             InitializeComponent();
+        }
+
+        public void load(string url)
+        {
+            webBrowser.Navigate(url);
+            webBrowser.Show();
+            Visible = true;
         }
     }
 }
