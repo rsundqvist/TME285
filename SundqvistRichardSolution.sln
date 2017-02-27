@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentSS1", "Assignment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentIP1", "AssignmentIP1\AssignmentIP1.csproj", "{E83C2C42-CC70-47F4-A29B-335D547BBA5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeechSynthesis", "..\SpeechProcessingSolution\FormantSpeechSynthesisApplication\SpeechSynthesis.csproj", "{108FAA26-7F13-4785-AB46-66CD3D5881B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,12 @@ Global
 		{E83C2C42-CC70-47F4-A29B-335D547BBA5E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E83C2C42-CC70-47F4-A29B-335D547BBA5E}.Release|x86.ActiveCfg = Release|Any CPU
 		{E83C2C42-CC70-47F4-A29B-335D547BBA5E}.Release|x86.Build.0 = Release|Any CPU
+		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Debug|x86.ActiveCfg = Debug|x86
+		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Debug|x86.Build.0 = Debug|x86
+		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Release|Any CPU.ActiveCfg = Release|x86
+		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Release|x86.ActiveCfg = Release|x86
+		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

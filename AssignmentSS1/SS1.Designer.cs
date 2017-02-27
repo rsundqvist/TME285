@@ -30,13 +30,13 @@
         {
             this.wordBox = new System.Windows.Forms.ListBox();
             this.sentenceBox = new System.Windows.Forms.ListBox();
-            this.speakButton = new System.Windows.Forms.Button();
+            this.speakSentenceButton = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.load = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
+            this.speakWordButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,7 +44,7 @@
             // 
             this.wordBox.FormattingEnabled = true;
             this.wordBox.ItemHeight = 20;
-            this.wordBox.Location = new System.Drawing.Point(12, 118);
+            this.wordBox.Location = new System.Drawing.Point(7, 118);
             this.wordBox.Name = "wordBox";
             this.wordBox.Size = new System.Drawing.Size(333, 344);
             this.wordBox.TabIndex = 1;
@@ -60,16 +60,17 @@
             this.sentenceBox.TabIndex = 2;
             this.sentenceBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.removeSentenceWord);
             // 
-            // speakButton
+            // speakSentenceButton
             // 
-            this.speakButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.speakButton.Location = new System.Drawing.Point(351, 468);
-            this.speakButton.Name = "speakButton";
-            this.speakButton.Size = new System.Drawing.Size(333, 61);
-            this.speakButton.TabIndex = 3;
-            this.speakButton.Text = "Speak Sentence";
-            this.speakButton.UseVisualStyleBackColor = true;
-            this.speakButton.Click += new System.EventHandler(this.speakSentence);
+            this.speakSentenceButton.Enabled = false;
+            this.speakSentenceButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.speakSentenceButton.Location = new System.Drawing.Point(351, 468);
+            this.speakSentenceButton.Name = "speakSentenceButton";
+            this.speakSentenceButton.Size = new System.Drawing.Size(333, 61);
+            this.speakSentenceButton.TabIndex = 3;
+            this.speakSentenceButton.Text = "Speak Sentence";
+            this.speakSentenceButton.UseVisualStyleBackColor = true;
+            this.speakSentenceButton.Click += new System.EventHandler(this.speakSentence);
             // 
             // richTextBox1
             // 
@@ -119,33 +120,34 @@
             this.load.Text = "Load Synthesizer";
             this.load.Click += new System.EventHandler(this.load_Click);
             // 
-            // button1
+            // speakWordButton
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(12, 468);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(333, 61);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Speak Word";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.singleWord);
+            this.speakWordButton.Enabled = false;
+            this.speakWordButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.speakWordButton.Location = new System.Drawing.Point(12, 468);
+            this.speakWordButton.Name = "speakWordButton";
+            this.speakWordButton.Size = new System.Drawing.Size(333, 61);
+            this.speakWordButton.TabIndex = 10;
+            this.speakWordButton.Text = "Speak Word";
+            this.speakWordButton.UseVisualStyleBackColor = true;
+            this.speakWordButton.Click += new System.EventHandler(this.singleWord);
             // 
-            // mainForm
+            // SS1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(696, 541);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.speakWordButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.speakButton);
+            this.Controls.Add(this.speakSentenceButton);
             this.Controls.Add(this.sentenceBox);
             this.Controls.Add(this.wordBox);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "mainForm";
+            this.Name = "SS1";
             this.Text = "Format Speech Synthesis - DEMO";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -157,13 +159,13 @@
         #endregion
         private System.Windows.Forms.ListBox wordBox;
         private System.Windows.Forms.ListBox sentenceBox;
-        private System.Windows.Forms.Button speakButton;
+        private System.Windows.Forms.Button speakSentenceButton;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem load;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button speakWordButton;
     }
 }
 

@@ -22,8 +22,6 @@ namespace FormatSpeechDemo
         public SS1()
         {
             InitializeComponent();
-            wordBox.Items.Add("foo");
-            sentenceBox.Items.Add("bar");
         }
 
         private void removeSentenceWord(object sender, MouseEventArgs e)
@@ -79,6 +77,9 @@ namespace FormatSpeechDemo
 
                     foreach (var wtsm in synthesizer.WordToSoundMappingList)
                         wordBox.Items.Add(wtsm.Word);
+
+                    speakWordButton.Enabled = true;
+                    speakSentenceButton.Enabled = true;
                 }
             }
         }
@@ -86,14 +87,17 @@ namespace FormatSpeechDemo
         private void singleWord(object sender, EventArgs e)
         {
             var word = wordBox.SelectedItem;
-            WAVSound sound = synthesizer.GenerateWord((string)word);
+            if (word != null)
+            {
+                WAVSound sound = synthesizer.GenerateWord((string)word);
 
-            SoundPlayer soundPlayer = new SoundPlayer();
-            sound.GenerateMemoryStream();
-            sound.WAVMemoryStream.Position = 0; // Manually rewind stream 
-            soundPlayer.Stream = null;
-            soundPlayer.Stream = sound.WAVMemoryStream;
-            soundPlayer.PlaySync();
+                SoundPlayer soundPlayer = new SoundPlayer();
+                sound.GenerateMemoryStream();
+                sound.WAVMemoryStream.Position = 0; // Manually rewind stream 
+                soundPlayer.Stream = null;
+                soundPlayer.Stream = sound.WAVMemoryStream;
+                soundPlayer.PlaySync();
+            }
         }
     }
 }

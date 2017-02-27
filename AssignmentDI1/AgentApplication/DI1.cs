@@ -47,7 +47,6 @@ namespace AgentApplication
         #region Agent definitions
         private void GenerateChristmasAgent()
         {
-            Console.WriteLine("GenerateChristmasAgent");
             agent = new ChristmasAgent();
             SetUpAgent();
             FinalizeSetup();

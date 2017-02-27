@@ -9,11 +9,11 @@ namespace FancyInternetDataAcquisition
     public partial class IDA1 : Form
     {
         #region fields
-        private DateTimeOffset lastPublishDate; //Shared
-        private DateTimeOffset newLastPublishDate; // Extra stupid shit because this thing isnt nullable.
-        private bool lastPublishDateSet = false;
         private bool ignoreKeywords = false;
         private readonly List<RSSDownloader> rssDownloaderList = new List<RSSDownloader>(); //One per feed
+        private readonly List<string> rssList = new List<string>(); //One per feed
+        private readonly List<DateTimeOffset> lastPublishDate = new List<DateTimeOffset>(); //One per feed
+        private readonly DateTimeOffset DEFAULT_DATE_TIME_OFFSET = DateTimeOffset.MaxValue; //Not nullable
         private readonly List<string> keywordList = new List<string>();
         private readonly List<string> urlList = new List<string>();
         #endregion
@@ -62,6 +62,10 @@ namespace FancyInternetDataAcquisition
             string[] lines = rssTextbox.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             rssDownloaderList.Clear();
+            lastPublishDate.Clear();
+            listBox.Items.Clear();
+            urlList.Clear();
+            rssList.Clear();
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -72,11 +76,13 @@ namespace FancyInternetDataAcquisition
 
                 string dateFormat = "ddd, dd MMM yyyy HH:mm:ss 'GMT'";
 
+                rssList.Add(rssFeed);
                 RSSDownloader rssDownloader = new RSSDownloader(rssFeed);
                 rssDownloader.SetCustomDateTimeFormat(dateFormat);
                 rssDownloader.DownloadInterval = 30;
                 rssDownloader.Start();
                 rssDownloaderList.Add(rssDownloader);
+                lastPublishDate.Add(DEFAULT_DATE_TIME_OFFSET);
             }
         }
         #endregion
@@ -86,61 +92,61 @@ namespace FancyInternetDataAcquisition
         {
             updateRSS();
             updateKeywords();
-            lastPublishDateSet = false;
         }
 
         public void fetchFromFeeds()
         {
             bool alertNew = false;
-            bool newLastPublishDateSet = false;
 
             for (int i = 0; i < rssDownloaderList.Count; i++)
             {
                 RSSDownloader rssDownloader = rssDownloaderList[i];
                 List<SyndicationItem> syndicationItemList;
 
-                if (lastPublishDateSet == false && newLastPublishDateSet == false)
+                if (lastPublishDate[i] == DEFAULT_DATE_TIME_OFFSET)
                     syndicationItemList = rssDownloader.TryGetAllItems();
                 else
-                    syndicationItemList = rssDownloader.TryGetItems(lastPublishDate);
+                    syndicationItemList = rssDownloader.TryGetItems(lastPublishDate[i]);
 
                 if (syndicationItemList == null)
                 {
                     //string url = rssDownloader.URL;
-                    System.Console.WriteLine("Download failed.");
+                    string url = rssList[i];
+                    System.Console.WriteLine("Download failed: \"" + url +"\"");
                     continue;
                 }
 
                 // Update timestamp
                 if (syndicationItemList.Count > 0)
                 {
-                    newLastPublishDateSet = true;
-                    DateTimeOffset currentItemDate = syndicationItemList[0].PublishDate;
-
-                    if (currentItemDate.CompareTo(newLastPublishDate) > 0)
-                        newLastPublishDate = syndicationItemList[0].PublishDate;
-                }
-
-                foreach (SyndicationItem si in syndicationItemList)
-                {
-                    if (ignoreKeywords || checkAgainstKeywordList(si.Title.Text))
+                    foreach (SyndicationItem si in syndicationItemList)
                     {
-                        string dateTag = si.PublishDate.ToString("yyyy-MM-dd HH:mm:ss");
-                        string itemText = dateTag + ": " + si.Title.Text;
-                        listBox.Items.Add(itemText);
-                        urlList.Add(si.Id);
-                        alertNew = true;
+                        if (ignoreKeywords || checkAgainstKeywordList(si.Title.Text))
+                        {
+                            string dateTag = si.PublishDate.ToString("yyyy-MM-dd HH:mm:ss");
+                            string itemText = dateTag + ": " + si.Title.Text;
+                            listBox.Items.Add(itemText);
+                            urlList.Add(si.Id);
+                            alertNew = true;
+                        }
                     }
+                    lastPublishDate[i] = getLatestPublishDate(syndicationItemList);
                 }
             }
 
-            if (newLastPublishDateSet)
-                lastPublishDate = newLastPublishDate;
-
-            lastPublishDateSet = newLastPublishDateSet;
-
             if (alertNew)
                 return; //TODO: voice alert
+        }
+
+        private DateTimeOffset getLatestPublishDate(List<SyndicationItem> syndicationItemList)
+        {
+            DateTimeOffset latest = syndicationItemList[0].PublishDate;
+
+            for (int i = 1; i < syndicationItemList.Count; i++)
+                if (latest.CompareTo(syndicationItemList[i].PublishDate) < 0)
+                    latest = syndicationItemList[i].PublishDate;
+
+            return latest;
         }
 
         #endregion
