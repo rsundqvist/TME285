@@ -14,11 +14,7 @@ namespace AgentApplication
         public ChristmasAgent()
         {
             Name = "ChristmasAgent";
-            Setup();
-        }
 
-        private void Setup()
-        {
             DialogueProcess openingDialogue = new DialogueProcess();
             openingDialogue.Name = "openingDialogue";
             openingDialogue.ActiveOnStartup = true;
@@ -47,6 +43,7 @@ namespace AgentApplication
             howWasChristmasAction.InputList.Add("Hey");
             howWasChristmasAction.OutputList.Add("How was christmas?");
             howWasChristmasAction.OutputList.Add("How was your christmas?");
+            //howWasChristmasAction.OutputList.Add("bla");
             howWasChristmasItem.ActionList.Add(howWasChristmasAction);
 
             DialogueProcess christmasDialogue = new DialogueProcess();
@@ -71,6 +68,9 @@ namespace AgentApplication
             ra_good.OutputList.Add("Good for you!");
             ra_good.OutputList.Add("Lovely!");
 
+            // ================================================================
+            //Good christmas inquiry
+            // ================================================================
             DialogueProcess goodChristmasDialogue = new DialogueProcess();
             goodChristmasDialogue.Name = "goodChristmasDialogue";
             goodChristmasDialogue.ActiveOnStartup = false;
@@ -79,19 +79,19 @@ namespace AgentApplication
             ra_good.BrainProcessToActivate = goodChristmasDialogue.Name;
 
             InteractionItem goodChristmasItem = new InteractionItem();
-            goodChristmasDialogue.ItemList.Add(goodChristmasItem);
             goodChristmasItem.Name = "goodChristmasItem";
             ra_good.TargetDialogueItemName = goodChristmasItem.Name;
             goodChristmasItem.MillisecondDelay = 500;
             OutputAction anythingElse = new OutputAction();
             anythingElse.OutputList.Add("Did you want to talk about anything else?");
             anythingElse.OutputList.Add("Anything else on your mind?");
-            anythingElse.BrainProcessToDeactivate = christmasDialogue.Name;
+            //anythingElse.BrainProcessToDeactivate = christmasDialogue.Name;
             goodChristmasItem.ActionList.Add(anythingElse);
-
+            goodChristmasDialogue.ItemList.Add(goodChristmasItem);
+            
             InteractionItem goodChristmasResponseItem = new InteractionItem();
             goodChristmasResponseItem.Name = "goodChristmasResponseItem";
-            goodChristmasDialogue.ItemList.Add(goodChristmasResponseItem);
+            //goodChristmasDialogue.ItemList.Add(goodChristmasResponseItem);
             anythingElse.TargetDialogueItemName = goodChristmasResponseItem.Name;
 
             ResponseAction nothingElse = new ResponseAction();
@@ -112,8 +112,10 @@ namespace AgentApplication
             somethingElse.OutputList.Add("I don't want to hear it.");
             goodChristmasResponseItem.ActionList.Add(somethingElse);
 
-
-            //Branch end
+            goodChristmasDialogue.ItemList.Add(goodChristmasResponseItem);
+            // ================================================================
+            // Branch end
+            // ================================================================
 
             ResponseAction ra_bad = new ResponseAction();
             christmasInquiryStartItem.ActionList.Add(ra_bad);
@@ -128,7 +130,6 @@ namespace AgentApplication
             {
                 ra_bad.OutputList.Add("I'm sorry to hear that, next year will be better.");
                 ra_bad.OutputList.Add("Ooh a new UDP packet, gotta go!");
-                ra_bad.OutputList.Add("It can't have been that bad...");
             }
             else
             {
@@ -150,9 +151,9 @@ namespace AgentApplication
                 ra_good_presents.InputList.Add("No");
                 ra_good_presents.InputList.Add("That's not it");
                 ra_good_presents.InputList.Add("Nope");
-                ra_good_presents.OutputList.Add("Alright, let's talk later.");
-                ra_good_presents.OutputList.Add("I give up.");
-                ra_good_presents.OutputList.Add("Ooh a new UDP packet!");
+                ra_good_presents.OutputList.Add("Then I can't help you.");
+                ra_good_presents.OutputList.Add("In that case, I can't help you.");
+
                 //Branch end
 
                 ResponseAction ra_bad_presents = new ResponseAction();
@@ -174,6 +175,15 @@ namespace AgentApplication
                 enemiesAction.InputList.Add("Yes");
                 enemiesAction.InputList.Add("Yes, and their pets");
                 enemiesAction.OutputList.Add("They've been added to your list of mortal enemies.");
+                enemiesAction.OutputList.Add("Done. You're a terrible person.");
+
+                ResponseAction noEnemiesAction = new ResponseAction();
+                enemiesItem.ActionList.Add(noEnemiesAction);
+                noEnemiesAction.InputList.Add("No");
+                noEnemiesAction.InputList.Add("Don't do that");
+                noEnemiesAction.InputList.Add("Nope");
+                noEnemiesAction.OutputList.Add("I'm going to do it anyway. Good bye!");
+                noEnemiesAction.OutputList.Add("Maybe next year. See you then!");
 
                 /*
                 MemoryAccessItem readEnemyItem = new MemoryAccessItem();

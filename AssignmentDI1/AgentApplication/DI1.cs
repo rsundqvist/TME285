@@ -28,11 +28,6 @@ namespace AgentApplication
         public DI1()
         {
             InitializeComponent();
-            Console.WriteLine("foo");
-            Console.WriteLine("foo");
-            Console.WriteLine("foo");
-            Console.WriteLine("foo");
-            Console.WriteLine("foo");
         }
         #endregion
 
@@ -52,11 +47,9 @@ namespace AgentApplication
         #region Agent definitions
         private void GenerateChristmasAgent()
         {
-            //SetUpAgent();
+            Console.WriteLine("GenerateChristmasAgent");
             agent = new ChristmasAgent();
-
             SetUpAgent();
-
             FinalizeSetup();
         }
         #endregion
