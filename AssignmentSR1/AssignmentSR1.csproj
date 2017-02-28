@@ -56,7 +56,7 @@
     <Compile Include="AddWordDialog.Designer.cs">
       <DependentUpon>AddWordDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="EAForISR.cs" />
+    <Compile Include="EvolutionaryAlgorithm.cs" />
     <Compile Include="SR1.cs">
       <SubType>Form</SubType>
     </Compile>

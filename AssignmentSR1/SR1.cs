@@ -592,7 +592,7 @@ namespace IsolatedWordRecognitionApplication
         {
             if (recognizer == null) return;
 
-            EAForISR ea = new EAForISR(recognizer);
+            EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm(recognizer);
 
             FolderBrowserDialog selectFolderDialog;
             selectFolderDialog = new FolderBrowserDialog();

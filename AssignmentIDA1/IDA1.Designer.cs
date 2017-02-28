@@ -38,9 +38,9 @@
             this.keywordsTextbox = new System.Windows.Forms.TextBox();
             this.rssTextbox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.newsTab.SuspendLayout();
             this.setupTab.SuspendLayout();
@@ -135,7 +135,7 @@
             this.keywordsTextbox.Name = "keywordsTextbox";
             this.keywordsTextbox.Size = new System.Drawing.Size(249, 343);
             this.keywordsTextbox.TabIndex = 0;
-            this.keywordsTextbox.Text = "Stefan\r\nLöfven\r\nDonald\r\nTrump\r\nErnst\r\nKirchsteiger";
+            this.keywordsTextbox.Text = "Stefan\r\nLöfven\r\nDonald\r\nTrump";
             // 
             // rssTextbox
             // 
@@ -162,6 +162,18 @@
             this.panel1.Size = new System.Drawing.Size(749, 50);
             this.panel1.TabIndex = 4;
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.checkBox1.Location = new System.Drawing.Point(129, 9);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(221, 33);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "Ignore Keywords";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -175,31 +187,19 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5859, 9);
+            this.label1.Location = new System.Drawing.Point(6608, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 29);
             this.label1.TabIndex = 1;
             this.label1.Text = "RSS feeds";
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.checkBox1.Location = new System.Drawing.Point(129, 9);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(221, 33);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Ignore Keywords";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // MainForm
+            // IDA1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(763, 441);
             this.Controls.Add(this.tabControl);
-            this.Name = "MainForm";
+            this.Name = "IDA1";
             this.Text = "Fancy Internet Data Acquisition";
             this.tabControl.ResumeLayout(false);
             this.newsTab.ResumeLayout(false);

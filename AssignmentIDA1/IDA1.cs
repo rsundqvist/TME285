@@ -11,8 +11,8 @@ namespace FancyInternetDataAcquisition
         #region fields
         private bool ignoreKeywords = false;
         private readonly List<RSSDownloader> rssDownloaderList = new List<RSSDownloader>(); //One per feed
-        private readonly List<string> rssList = new List<string>(); //One per feed
-        private readonly List<DateTimeOffset> lastPublishDate = new List<DateTimeOffset>(); //One per feed
+        private readonly List<string> rssList = new List<string>();
+        private readonly List<DateTimeOffset> lastPublishDate = new List<DateTimeOffset>();
         private readonly DateTimeOffset DEFAULT_DATE_TIME_OFFSET = DateTimeOffset.MaxValue; //Not nullable
         private readonly List<string> keywordList = new List<string>();
         private readonly List<string> urlList = new List<string>();
@@ -44,7 +44,7 @@ namespace FancyInternetDataAcquisition
         private void stop()
         {
             foreach (RSSDownloader rssDownloader in rssDownloaderList)
-                rssDownloader?.HardStop();
+                rssDownloader.HardStop();
         }
 
         private void updateKeywords()

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IsolatedWordRecognitionApplication
 {
-    class EAForISR
+    class EvolutionaryAlgorithm
     {
         #region const
         private const int MAX_ITERATIONS = 1000;
@@ -42,7 +42,7 @@ namespace IsolatedWordRecognitionApplication
         private double bestFitness;
         #endregion
 
-        public EAForISR(IsolatedWordRecognizer recognizer)
+        public EvolutionaryAlgorithm(IsolatedWordRecognizer recognizer)
         {
             this.recognizer = recognizer;
             recognizer.RecognitionThreshold = 0.005;
@@ -176,10 +176,10 @@ namespace IsolatedWordRecognitionApplication
             double fitness;
 
             Tuple<string, double, bool> result = recognize(knownSound);
-            if (result.Item3 && knownSound.Name.Contains(result.Item1))
-                fitness = 1 / result.Item2;
+            if (result.Item3 && knownSound.Name == result.Item1)
+                fitness = 1 - result.Item2;
             else
-                fitness = -result.Item2 * result.Item2; //Didnt recognize at all or recognized wrong sound
+                fitness = -result.Item2; //Didnt recognize at all or recognized wrong sound
 
             //Console.WriteLine("    " + knownSound.Name + ": RESULT = " + result.Item1 + ", d = "
             //    + result.Item2 + ", R = " + (result.Item3 && knownSound.Name.Equals(result.Item1)));
@@ -192,11 +192,10 @@ namespace IsolatedWordRecognitionApplication
 
             Tuple<string, double, bool> result = recognize(unknownSound);
             if (!result.Item3)
-                fitness = result.Item2 * result.Item2; //Doesnt recgonize unknown sound - good!
+                fitness = result.Item2; //Doesnt recgonize unknown sound - good!
             else
-                fitness = -1 / result.Item2; //Recgonized unknown sound as known.
+                fitness = -1 + result.Item2; //Recgonized unknown sound as known.
 
-            double f = Math.Pow(Math.E, 2);
             //Console.WriteLine("    " + unknownSound.Name + ": RESULT = " + result.Item1 + ", d = "
             //    + result.Item2 + ", R = " + (result.Item3 && unknownSound.Name.Equals(result.Item1)));
             return fitness;
