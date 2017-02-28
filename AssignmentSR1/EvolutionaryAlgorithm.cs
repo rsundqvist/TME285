@@ -352,6 +352,7 @@ namespace IsolatedWordRecognitionApplication
             for (int i = 0; i < recognizerSounds.Count; i++)
             {
                 string[] filePaths = Directory.GetFiles(folder + "\\" + recognizerSounds[i]);
+                Console.WriteLine("filePaths = " + filePaths);
                 List<WAVSound> soundList = new List<WAVSound>(filePaths.Length);
 
                 foreach (string path in filePaths)
