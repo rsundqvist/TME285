@@ -142,27 +142,27 @@ namespace FaceRecognitionApplication
 
         public void DrawRect(Tuple<int, int, int, int> bounds, int lineWidth)
         {
+            int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+            int widthInBytes = bitmapData.Width * bytesPerPixel;
+
             int x1 = bounds.Item1;
             int y1 = bounds.Item2;
             int x2 = bounds.Item3;
             int y2 = bounds.Item4;
+
             Console.WriteLine(bounds.ToString());
             unsafe
             {
-                int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
-                int widthInBytes = bitmapData.Width * bytesPerPixel;
 
                 byte* ptrFirstPixel = (byte*)bitmapData.Scan0;
-
                 //Vertical lines
-                Parallel.For(y1, y2, y =>
+                Parallel.For(y1 * bytesPerPixel, y2 * bytesPerPixel, y =>
                 {
-                    Console.WriteLine("y = " + y);
                     byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
                     //left
                     for (int x = x1; x < x1 + lineWidth; x++)
                     {
-                        int xp = x * widthInBytes;
+                        int xp = x * bytesPerPixel;
                         currentLine[xp] = 0;
                         currentLine[xp + 1] = 0;
                         currentLine[xp + 2] = 255;
@@ -170,7 +170,35 @@ namespace FaceRecognitionApplication
                     //right
                     for (int x = x2 - lineWidth; x < x2; x++)
                     {
-                        int xp = x * widthInBytes;
+                        int xp = x * bytesPerPixel;
+                        currentLine[xp] = 0;
+                        currentLine[xp + 1] = 0;
+                        currentLine[xp + 2] = 255;
+                    }
+                });
+
+                //Horizontal lines
+                //Top line
+                Parallel.For(y1 * bytesPerPixel, (y1 + lineWidth/2) * bytesPerPixel, y =>
+                {
+                    byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
+                    //left
+                    for (int x = x1; x < x2; x++)
+                    {
+                        int xp = x * bytesPerPixel;
+                        currentLine[xp] = 0;
+                        currentLine[xp + 1] = 0;
+                        currentLine[xp + 2] = 255;
+                    }
+                });
+                //Bottom line
+                Parallel.For((y2 - lineWidth/2) * bytesPerPixel, y2 * bytesPerPixel, y =>
+                {
+                    byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
+                    //left
+                    for (int x = x1; x < x2; x++)
+                    {
+                        int xp = x * bytesPerPixel;
                         currentLine[xp] = 0;
                         currentLine[xp + 1] = 0;
                         currentLine[xp + 2] = 255;
@@ -213,6 +241,7 @@ namespace FaceRecognitionApplication
         /// Skin pixel detection by formulae (8), Simple Face-detection Algorithm Based on
         /// Minimum Facial Features, Yao-Jiunn Chen, Yen-Chun Lin, 2007
         /// </summary>
+        /// <returns>Face boundries as (x1, y1, x2, y2).</returns>
         public Tuple<int, int, int, int> FindSkinPixelsChenLin()
         {
             unsafe

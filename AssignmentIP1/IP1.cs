@@ -84,7 +84,7 @@ namespace FaceRecognitionApplication
 
             //Orig + box
             AugmentedImageProcessor ipBox = new AugmentedImageProcessor(bitmap);
-            ipBox.DrawRect(bounds, 20);
+            ipBox.DrawRect(bounds, 5);
             ipBox.Release();
             imagePlotOrig.SetImage(ipBox.Bitmap);
 
