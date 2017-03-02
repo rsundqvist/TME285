@@ -1,4 +1,5 @@
 ﻿using AudioLibrary;
+using ObjectSerializerLibrary;
 using SpeechRecognitionLibrary;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,6 @@ namespace IsolatedWordRecognitionApplication
         private const int SAMPLE_SIZE = 5;
         private const double MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 20;
 
-        private const int NUMBER_OF_INDIVIDUALS = 100;
         private const double CREEP_RANGE = 0.1;
         private const double SQUASH_PARAMETER = 0.3;
         private const double INITIAL_WEIGHT_RANGE = 1;
@@ -31,6 +31,8 @@ namespace IsolatedWordRecognitionApplication
         #region field
         private readonly Random random = new Random();
         private readonly IsolatedWordRecognizer recognizer;
+        private readonly List<IsolatedWordRecognizer> clones;
+        private int NUMBER_OF_INDIVIDUALS;
         private List<string> recognizerSounds; //= recognizer.GetAvailableSounds();
         private readonly List<List<WAVSound>> testSound = new List<List<WAVSound>>();
         private readonly List<WAVSound> unknownSoundList = new List<WAVSound>();
@@ -38,14 +40,16 @@ namespace IsolatedWordRecognitionApplication
         private List<List<double>> population;
         private List<List<double>> tmpPopulation;
         private List<double> bestIndividual;
+        private int bestIndividualIndex;
         private List<double> popFitness;
         private double bestFitness;
         #endregion
 
-        public EvolutionaryAlgorithm(IsolatedWordRecognizer recognizer)
+        public EvolutionaryAlgorithm(IsolatedWordRecognizer recognizer, List<IsolatedWordRecognizer> clones)
         {
             this.recognizer = recognizer;
-            recognizer.RecognitionThreshold = 0.005;
+            this.clones = clones;
+            NUMBER_OF_INDIVIDUALS = clones.Count;
         }
 
         #region private
@@ -76,8 +80,9 @@ namespace IsolatedWordRecognitionApplication
             }
 
             bestIndividual = new List<double>(recognizer.WeightList);
-            bestFitness = evaluate(bestIndividual);
-            insertElites(1);
+            bestIndividualIndex = clones.Count - 1;
+            bestFitness = evaluate(bestIndividualIndex);
+            population.Add(bestIndividual);
         }
 
         private void mutate(List<double> individual)
@@ -147,9 +152,10 @@ namespace IsolatedWordRecognitionApplication
             return winner;
         }
 
-        private double evaluate(List<double> individual)
+        private double evaluate(int iIndividual)
         {
-            recognizer.WeightList = individual;
+            recognizer.WeightList = population[iIndividual];
+            IsolatedWordRecognizer iRecognizer = clones[iIndividual];
             double fitness = 0;
             List<WAVSound> testKnown = new List<WAVSound>(KNOWN_SOUNDS_PER_TEST);
             List<WAVSound> testUnknown = new List<WAVSound>(UNKNOWN_SOUNDS_PER_TEST);
@@ -162,42 +168,39 @@ namespace IsolatedWordRecognitionApplication
                 populateRandomUnknown(testUnknown);
 
                 foreach (WAVSound sound in testKnown)
-                    fitness += evaluateKnown(sound);
+                    fitness += evaluateKnown(sound, iRecognizer);
 
                 foreach (WAVSound sound in testUnknown)
-                    fitness += evaluateUnknown(sound);
+                    fitness += evaluateUnknown(sound, iRecognizer);
             }
 
             return fitness / SAMPLE_SIZE;
         }
 
-        private double evaluateKnown(WAVSound knownSound)
+        private double evaluateKnown(WAVSound knownSound, IsolatedWordRecognizer recognizer)
         {
             double fitness;
-
-            Tuple<string, double, bool> result = recognize(knownSound);
+            Tuple<string, double, bool> result = recognize(knownSound, recognizer);
             if (result.Item3 && knownSound.Name == result.Item1)
-                fitness = 1 - result.Item2;
+                fitness = -Math.Log10(result.Item2);
             else
-                fitness = -result.Item2; //Didnt recognize at all or recognized wrong sound
+                fitness = -(Math.Pow(10, 3 * result.Item2) - 1)*20; //Didn't recognize or recognized wrong sound
 
-            //Console.WriteLine("    " + knownSound.Name + ": RESULT = " + result.Item1 + ", d = "
-            //    + result.Item2 + ", R = " + (result.Item3 && knownSound.Name.Equals(result.Item1)));
+            //Console.WriteLine("    " + knownSound.Name + ": RESULT = " + result.Item1 + ", d = " + result.Item2 + ", R = " + (result.Item3 && knownSound.Name.Equals(result.Item1)));
             return fitness;
         }
 
-        private double evaluateUnknown(WAVSound unknownSound)
+        private double evaluateUnknown(WAVSound unknownSound, IsolatedWordRecognizer recognizer)
         {
             double fitness;
 
-            Tuple<string, double, bool> result = recognize(unknownSound);
+            Tuple<string, double, bool> result = recognize(unknownSound, recognizer);
             if (!result.Item3)
-                fitness = result.Item2; //Doesnt recgonize unknown sound - good!
+                fitness = Math.Pow(10, 3 * result.Item2) - 1; //Doesnt recgonize unknown sound - good!
             else
-                fitness = -1 + result.Item2; //Recgonized unknown sound as known.
+                fitness = Math.Log10(result.Item2)*20; //Recgonized unknown sound as known.
 
-            //Console.WriteLine("    " + unknownSound.Name + ": RESULT = " + result.Item1 + ", d = "
-            //    + result.Item2 + ", R = " + (result.Item3 && unknownSound.Name.Equals(result.Item1)));
+            //Console.WriteLine("    " + unknownSound.Name + ": RESULT = " + result.Item1 + ", d = " + result.Item2 + ", R = " + (result.Item3 && unknownSound.Name.Equals(result.Item1)));
             return fitness;
         }
 
@@ -245,7 +248,7 @@ namespace IsolatedWordRecognitionApplication
         {
             Console.WriteLine("");
             Console.WriteLine("");
-            Console.WriteLine("START EVOLVE");
+            Console.WriteLine("START EVOLVE: clones = " + clones.Count);
             Console.WriteLine("RecognitionThreshold: " + recognizer.RecognitionThreshold);
             initialize();
 
@@ -260,11 +263,11 @@ namespace IsolatedWordRecognitionApplication
                 // ===========================================================
                 // Evaluate population
                 // =========================================================== 
-                for (int i = 0; i < NUMBER_OF_INDIVIDUALS; i++)
+                Parallel.For(0, NUMBER_OF_INDIVIDUALS, index =>
                 {
-                    popFitness[i] = evaluate(population[i]);
+                    popFitness[index] = evaluate(index);
 
-                    while (double.IsNaN(popFitness[i])) //Result from IPA somtimes NaN.
+                    while (double.IsNaN(popFitness[index])) //Result from IPA somtimes NaN.
                     {
                         isNaNCount++;
                         int numWeights = recognizer.WeightList.Count;
@@ -276,14 +279,19 @@ namespace IsolatedWordRecognitionApplication
                             double initialWeight = -INITIAL_WEIGHT_RANGE + 2 * random.NextDouble();
                             weightList.Add(initialWeight);
                         }
-                        population[i] = weightList;
-                        tmpPopulation[i] = weightList;
-                        popFitness[i] = evaluate(weightList);
+                        population[index] = weightList;
+                        tmpPopulation[index] = weightList;
+                        popFitness[index] = evaluate(index);
                     }
+                }); //para for
 
+                //Update best outside Parallell environment
+                for (int i = 0; i < NUMBER_OF_INDIVIDUALS; i++)
+                {
                     if (popFitness[i] > bestFitness)
                     {
                         bestFitness = popFitness[i];
+                        bestIndividualIndex = i;
                         bestIndividual = new List<double>(population[i]); //Should not be mutated.
                         generationsWithoutImprovement = 0;
                     }
@@ -325,8 +333,8 @@ namespace IsolatedWordRecognitionApplication
 
                 insertElites(1);
 
-                int avg = (int)(popFitness.Sum() / popFitness.Count + 0.5);
-                int max = (int)(bestFitness + 0.5);
+                string avg = ((popFitness.Sum() / popFitness.Count + 0.5)).ToString("#.0000");
+                string max = (bestFitness + 0.5).ToString("#.0000");
                 Console.WriteLine("(i, max, avg) = ({0},\t{1},\t{2}), GWO:\t{3}/{4},\t NaN remakes: {5}",
                     iteration, max, avg, generationsWithoutImprovement, MAX_GENERATIONS_WITHOUT_IMPROVEMENT, isNaNCount);
                 /*
@@ -352,7 +360,6 @@ namespace IsolatedWordRecognitionApplication
             for (int i = 0; i < recognizerSounds.Count; i++)
             {
                 string[] filePaths = Directory.GetFiles(folder + "\\" + recognizerSounds[i]);
-                Console.WriteLine("filePaths = " + filePaths);
                 List<WAVSound> soundList = new List<WAVSound>(filePaths.Length);
 
                 foreach (string path in filePaths)
@@ -396,7 +403,7 @@ namespace IsolatedWordRecognitionApplication
         /// </summary>
         /// <param name="sound"></param>
         /// <returns></returns>
-        private Tuple<string, double, bool> recognize(WAVSound sound)
+        private Tuple<string, double, bool> recognize(WAVSound sound, IsolatedWordRecognizer recognizer)
         {
             RecognitionResult recognitionResult = recognizer.RecognizeSingle(sound);
 

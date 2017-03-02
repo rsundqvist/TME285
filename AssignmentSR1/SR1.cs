@@ -251,6 +251,7 @@ namespace IsolatedWordRecognitionApplication
             }
         }
 
+        List<IsolatedWordRecognizer> clones = new List<IsolatedWordRecognizer>();
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -265,6 +266,14 @@ namespace IsolatedWordRecognitionApplication
                 saveToolStripMenuItem.Enabled = true;
                 featurePlotPanel.Clear();
                 HandleAvailableSoundsChanged(this, EventArgs.Empty); // A bit ugly, but OK...
+
+                clones.Clear();
+                //NUMBER OF INDIVIDUALS
+                for (int i = 0; i < 50; i++)
+                {
+                    IsolatedWordRecognizer clone = (IsolatedWordRecognizer)ObjectXmlSerializer.ObtainSerializedObject(openFileDialog.FileName, typeof(IsolatedWordRecognizer));
+                    clones.Add(clone);
+                }
             }
         }
 
@@ -592,7 +601,7 @@ namespace IsolatedWordRecognitionApplication
         {
             if (recognizer == null) return;
 
-            EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm(recognizer);
+            EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm(recognizer, clones);
 
             FolderBrowserDialog selectFolderDialog;
             selectFolderDialog = new FolderBrowserDialog();

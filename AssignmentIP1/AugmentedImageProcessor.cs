@@ -12,23 +12,45 @@ namespace FaceRecognitionApplication
     {
         public AugmentedImageProcessor(Bitmap bitmap)
             : base(bitmap)
+        { }
+
+        public void Average(bool[,] matrix, int size, int fraction)
         {
+            int width = matrix.GetLength(0);
+            int height = matrix.GetLength(1);
+
+            int adjWidth = width / size;
+            int adjHeight = height / size;
+
+            int numTrueThreshold = (int)((double)size * size / fraction + 0.5);
+            Parallel.For(0, adjWidth, x =>
+            {
+                Parallel.For(0, adjHeight, y =>
+                {
+                    int numTrue = 0;
+                    for (int i = x * size; i < size * (x + 1); i++)
+                        for (int j = y * size; j < size * (y + 1); j++)
+                            if (matrix[i, j])
+                                numTrue++;
+
+                    bool thresholdReached = numTrue >= numTrueThreshold;
+                    for (int i = x * size; i < size * (x + 1); i++)
+                        for (int j = y * size; j < size * (y + 1); j++)
+                            matrix[i, j] = thresholdReached;
+                });
+            });
         }
 
-        /// <summary>
-        /// Normalization by formulae (9) and (10) in Simple Face-detection Algorithm Based on
-        /// Minimum Facial Features, Yao-Jiunn Chen, Yen-Chun Lin, 2007
-        /// 
-        /// Will sett all hair-paixels to white and all others to black.
-        /// </summary>
-        public void FindHairPixelsChenLin()
+        public bool[,] BinaryImage()
         {
+            bool[,] binary = new bool[bitmapData.Width, bitmapData.Height];
+
             unsafe
             {
-                int bytesPerPixel = System.Drawing.Bitmap.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
                 int widthInBytes = bitmapData.Width * bytesPerPixel;
-                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
 
+                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
                 Parallel.For(0, bitmapData.Height, y =>
                 {
                     byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
@@ -37,15 +59,43 @@ namespace FaceRecognitionApplication
                         int blue = currentLine[x];
                         int green = currentLine[x + 1];
                         int red = currentLine[x + 2];
-                        int I = (int)Math.Round((blue + green + red) / 3.0);
-                        int H = GetHueFromRGB(red, green, blue);
+                        binary[x / bytesPerPixel, y / bytesPerPixel] = blue != 0 && green != 0 && red != 0;
+                    }
+                });
+            }
 
-                        if (I < 80 && (blue - green < 15 || blue - red < 15)
-                            || H > 20 && H <= 40)
+            return binary;
+        }
+
+        public void FindHairPixelsChenLin()
+        {
+            unsafe
+            {
+                int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                int widthInBytes = bitmapData.Width * bytesPerPixel;
+
+                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
+                Parallel.For(0, bitmapData.Height, y =>
+                {
+                    byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
+                    for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
+                    {
+                        int blue = currentLine[x];
+                        int green = currentLine[x + 1];
+                        int red = currentLine[x + 2];
+
+                        //HSI stuff
+                        double I = GetIntensity(blue, green, red); //Ref (7)
+                        double H = GetHue(blue, green, red);
+
+                        //Detect skin
+                        bool isHair = I < 80 && (blue - green < 15 || blue - red < 15)
+                        || (H < 20 && H <= 40);
+                        if (isHair)
                         {
-                            currentLine[x] = 1;
-                            currentLine[x + 1] = 1;
-                            currentLine[x + 2] = 1;
+                            currentLine[x] = 255;
+                            currentLine[x + 1] = 255;
+                            currentLine[x + 2] = 255;
                         }
                         else
                         {
@@ -58,74 +108,198 @@ namespace FaceRecognitionApplication
             }
         }
 
-        public int GetHueFromRGB(double r, double g, double b)
+        public static Tuple<int, int, int, int> GetBoundries(bool[,] binaryImage)
         {
-            r = r / 255.0;
-            g = g / 255.0;
-            b = b / 255.0;
+            int width = binaryImage.GetLength(0);
+            int height = binaryImage.GetLength(1);
 
-            double max = Math.Max(r, Math.Max(g, b));
-            double min = Math.Min(r, Math.Min(g, b));
-            double hue;
+            int minX = width;
+            int maxX = 0;
+            int minY = height;
+            int maxY = 0;
 
-            if (r == max)
-                hue = (g - b) / (max - min);
-            else if (g == max)
-                hue = 2.0 + (b - r) / (max - min);
-            else if (b == max)
-                hue = 4.0 + (r - g) / (max - min);
-            else
-                throw new Exception("Uh oh.");
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    if (binaryImage[x, y])
+                    {
+                        if (x < minX)
+                            minX = x;
+                        else if (x > maxX)
+                            maxX = x;
 
-            hue = hue * 60;
-            hue = hue < 0 ? hue + 360.0 : hue;
+                        if (y < minY)
+                            minY = y;
+                        else if (y > maxY)
+                            maxY = y;
+                    }
+                }
+            }
 
-            return (int)(hue + 0.5);
-
-            /* 
-            http://stackoverflow.com/questions/23090019/fastest-formula-to-get-hue-from-rgb
-            http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/
-
-            R = r / 255 = 0.09
-            G = g / 255 = 0.38
-            B = b / 255 = 0.46
-            If Red is max, then Hue = (G - B) / (max - min)
-            If Green is max, then Hue = 2.0 + (B - R) / (max - min)
-            If Blue is max, then Hue = 4.0 + (R - G) / (max - min)
-            */
+            return Tuple.Create(minX, minY, maxX, maxY);
         }
 
-        /// <summary>
-        /// Normalization by formulae (1) and (2) in Simple Face-detection Algorithm Based on
-        /// Minimum Facial Features, Yao-Jiunn Chen, Yen-Chun Lin, 2007
-        /// </summary>
-        public void normalize()
+        public void DrawRect(Tuple<int, int, int, int> bounds, int lineWidth)
+        {
+            int x1 = bounds.Item1;
+            int y1 = bounds.Item2;
+            int x2 = bounds.Item3;
+            int y2 = bounds.Item4;
+            Console.WriteLine(bounds.ToString());
+            unsafe
+            {
+                int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                int widthInBytes = bitmapData.Width * bytesPerPixel;
+
+                byte* ptrFirstPixel = (byte*)bitmapData.Scan0;
+
+                //Vertical lines
+                Parallel.For(y1, y2, y =>
+                {
+                    Console.WriteLine("y = " + y);
+                    byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
+                    //left
+                    for (int x = x1; x < x1 + lineWidth; x++)
+                    {
+                        int xp = x * widthInBytes;
+                        currentLine[xp] = 0;
+                        currentLine[xp + 1] = 0;
+                        currentLine[xp + 2] = 255;
+                    }
+                    //right
+                    for (int x = x2 - lineWidth; x < x2; x++)
+                    {
+                        int xp = x * widthInBytes;
+                        currentLine[xp] = 0;
+                        currentLine[xp + 1] = 0;
+                        currentLine[xp + 2] = 255;
+                    }
+                });
+            }
+        }
+
+        public void BinaryImage(bool[,] binaryImage)
         {
             unsafe
             {
-                int bytesPerPixel = System.Drawing.Bitmap.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
                 int widthInBytes = bitmapData.Width * bytesPerPixel;
-                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
 
+                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
                 Parallel.For(0, bitmapData.Height, y =>
                 {
                     byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
                     for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
                     {
-                        int oldBlue = currentLine[x];
-                        int oldGreen = currentLine[x + 1];
-                        int oldRed = currentLine[x + 2];
-
-                        double sum = oldBlue + oldGreen + oldRed;
-                        byte newGreen = (byte)Math.Round(oldGreen / sum);
-                        byte newRed = (byte)Math.Round(oldRed / sum);
-
-                //Blue isn't changed.
-                currentLine[x + 1] = newGreen;
-                        currentLine[x + 2] = newRed;
+                        if (binaryImage[x / bytesPerPixel, y / bytesPerPixel])
+                        {
+                            currentLine[x] = 255;
+                            currentLine[x + 1] = 255;
+                            currentLine[x + 2] = 255;
+                        }
+                        else
+                        {
+                            currentLine[x] = 0;
+                            currentLine[x + 1] = 0;
+                            currentLine[x + 2] = 0;
+                        }
                     }
                 });
             }
+        }
+
+        /// <summary>
+        /// Skin pixel detection by formulae (8), Simple Face-detection Algorithm Based on
+        /// Minimum Facial Features, Yao-Jiunn Chen, Yen-Chun Lin, 2007
+        /// </summary>
+        public Tuple<int, int, int, int> FindSkinPixelsChenLin()
+        {
+            unsafe
+            {
+                int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                int widthInBytes = bitmapData.Width * bytesPerPixel;
+
+                byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
+                Parallel.For(0, bitmapData.Height, y =>
+                {
+                    byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
+                    for (int x = 0; x < widthInBytes; x = x + bytesPerPixel)
+                    {
+                        int blue = currentLine[x];
+                        int green = currentLine[x + 1];
+                        int red = currentLine[x + 2];
+
+                        //Normalized stuff
+                        Tuple<double, double, double> normalized = NormalizePixel(
+                            blue, green, red);
+                        double b = normalized.Item1;
+                        double g = normalized.Item2;
+                        double r = normalized.Item3;
+                        double f1 = -1.376 * r * r + 1.074 * r + 0.2; //Ref (3)
+                        double f2 = -0.776 * r * r + 0.5601 * r + 0.18; //Ref (4)
+                        double w = (r - 0.33) * (r - 0.33) + (g - 0.33) * (g - 0.33); //Ref (5)
+                        //w = 1;
+
+                        //HSI stuff
+                        double H = GetHue(blue, green, red); //Ref (7)
+
+                        //Detect skin
+                        bool isSkin = g < f1 && g > f2 && w > 0.001 &&
+                        (H > 240 || H <= 20);
+                        if (isSkin)
+                        {
+                            currentLine[x] = 255;
+                            currentLine[x + 1] = 255;
+                            currentLine[x + 2] = 255;
+                        }
+                        else
+                        {
+                            currentLine[x] = 0;
+                            currentLine[x + 1] = 0;
+                            currentLine[x + 2] = 0;
+                        }
+                    }
+                });
+            }
+            bool[,] binaryImage = BinaryImage();
+            Average(binaryImage, 5, 2);
+            BinaryImage(binaryImage);
+            return GetBoundries(binaryImage);
+        }
+
+        /// <summary>
+        /// Hues element, ref 7. Simple Face-detection Algorithm Based on
+        /// Minimum Facial Features, Yao-Jiunn Chen, Yen-Chun Lin, 2007
+        /// </summary>
+        private static double GetHue(int B, int G, int R)
+        {
+            double numerator = 0.5 * ((R - G) + (R - B));
+            double denominator = Math.Sqrt((R - G) * (R - G) + (R - B) * (G - B));
+
+            double arg = numerator / denominator;
+            double theta = RadianToDegree(Math.Acos(arg)); //Acos returns radians
+
+            return B <= G ? theta : 360 - theta;
+        }
+
+        private static double GetIntensity(int B, int G, int R)
+        {
+            return (B + G + R) / 3.0;
+        }
+
+        private static double RadianToDegree(double angle)
+        {
+            return angle * 180.0 / Math.PI;
+        }
+
+        private Tuple<double, double, double> NormalizePixel(int B, int G, int R)
+        {
+            double sum = B + G + R;
+            double newBlue = B / sum;
+            double newGreen = G / sum;
+            double newRed = R / sum;
+            return Tuple.Create(newBlue, newGreen, newRed);
         }
     }
 }
