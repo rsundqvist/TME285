@@ -88,17 +88,17 @@ namespace FaceRecognitionApplication
             ipBox.Release();
             imagePlotOrig.SetImage(ipBox.Bitmap);
 
-            tabControl.SelectTab(1);
+            tabControl.SelectTab(imageTab);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            tabControl.SelectTab(1);
+            tabControl.SelectTab(binaryImageTab);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            tabControl.SelectTab(2);
+            tabControl.SelectTab(imageTab);
         }
     }
 }

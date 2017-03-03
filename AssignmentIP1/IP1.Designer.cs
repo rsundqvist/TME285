@@ -33,28 +33,28 @@
             this.loadImageButton = new System.Windows.Forms.Button();
             this.takePictureButton = new System.Windows.Forms.Button();
             this.cameraViewControl = new ImageProcessingLibrary.Cameras.CameraViewControl();
-            this.pictureTab = new System.Windows.Forms.TabPage();
+            this.imageTab = new System.Windows.Forms.TabPage();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.imagePlotOrig = new ImageProcessingLibrary.Visualization.ImagePlot();
+            this.binaryImageTab = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
             this.toTab0Button = new System.Windows.Forms.Button();
             this.imagePlot = new ImageProcessingLibrary.Visualization.ImagePlot();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.cameraSetupControl = new ImageProcessingLibrary.Cameras.CameraSetupControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.imagePlotOrig = new ImageProcessingLibrary.Visualization.ImagePlot();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.cameraTab.SuspendLayout();
-            this.pictureTab.SuspendLayout();
+            this.imageTab.SuspendLayout();
+            this.binaryImageTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.cameraTab);
-            this.tabControl.Controls.Add(this.pictureTab);
-            this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Controls.Add(this.imageTab);
+            this.tabControl.Controls.Add(this.binaryImageTab);
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
@@ -113,18 +113,82 @@
             this.cameraViewControl.Size = new System.Drawing.Size(1211, 601);
             this.cameraViewControl.TabIndex = 0;
             // 
-            // pictureTab
+            // imageTab
             // 
-            this.pictureTab.Controls.Add(this.button3);
-            this.pictureTab.Controls.Add(this.toTab0Button);
-            this.pictureTab.Controls.Add(this.imagePlot);
-            this.pictureTab.Location = new System.Drawing.Point(4, 29);
-            this.pictureTab.Name = "pictureTab";
-            this.pictureTab.Padding = new System.Windows.Forms.Padding(3);
-            this.pictureTab.Size = new System.Drawing.Size(1217, 607);
-            this.pictureTab.TabIndex = 1;
-            this.pictureTab.Text = "Image";
-            this.pictureTab.UseVisualStyleBackColor = true;
+            this.imageTab.Controls.Add(this.button2);
+            this.imageTab.Controls.Add(this.button1);
+            this.imageTab.Controls.Add(this.imagePlotOrig);
+            this.imageTab.Location = new System.Drawing.Point(4, 29);
+            this.imageTab.Name = "imageTab";
+            this.imageTab.Padding = new System.Windows.Forms.Padding(3);
+            this.imageTab.Size = new System.Drawing.Size(1217, 607);
+            this.imageTab.TabIndex = 3;
+            this.imageTab.Text = "Image";
+            this.imageTab.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(1081, 425);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(140, 90);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "View Binary";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(1081, 521);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(140, 90);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Back To Camera";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.toTab0Button_Click);
+            // 
+            // imagePlotOrig
+            // 
+            this.imagePlotOrig.BackColor = System.Drawing.Color.Black;
+            this.imagePlotOrig.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imagePlotOrig.Location = new System.Drawing.Point(3, 3);
+            this.imagePlotOrig.Name = "imagePlotOrig";
+            this.imagePlotOrig.Size = new System.Drawing.Size(1211, 601);
+            this.imagePlotOrig.TabIndex = 0;
+            // 
+            // binaryImageTab
+            // 
+            this.binaryImageTab.Controls.Add(this.button3);
+            this.binaryImageTab.Controls.Add(this.toTab0Button);
+            this.binaryImageTab.Controls.Add(this.imagePlot);
+            this.binaryImageTab.Location = new System.Drawing.Point(4, 29);
+            this.binaryImageTab.Name = "binaryImageTab";
+            this.binaryImageTab.Padding = new System.Windows.Forms.Padding(3);
+            this.binaryImageTab.Size = new System.Drawing.Size(1217, 607);
+            this.binaryImageTab.TabIndex = 1;
+            this.binaryImageTab.Text = "Binary Image";
+            this.binaryImageTab.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(1081, 425);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(140, 90);
+            this.button3.TabIndex = 4;
+            this.button3.Text = "View Image";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // toTab0Button
             // 
@@ -171,70 +235,6 @@
             this.cameraSetupControl.Size = new System.Drawing.Size(1211, 601);
             this.cameraSetupControl.TabIndex = 0;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Controls.Add(this.imagePlotOrig);
-            this.tabPage2.Location = new System.Drawing.Point(4, 29);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1217, 607);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Original Image";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // imagePlotOrig
-            // 
-            this.imagePlotOrig.BackColor = System.Drawing.Color.Black;
-            this.imagePlotOrig.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imagePlotOrig.Location = new System.Drawing.Point(3, 3);
-            this.imagePlotOrig.Name = "imagePlotOrig";
-            this.imagePlotOrig.Size = new System.Drawing.Size(1211, 601);
-            this.imagePlotOrig.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(1081, 521);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(140, 90);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Back To Camera";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.toTab0Button_Click);
-            // 
-            // button2
-            // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(1081, 425);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(140, 90);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Back To Image";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button3
-            // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(1081, 425);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(140, 90);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "View Original";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // IP1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -245,10 +245,10 @@
             this.Text = "Face Recognition Application";
             this.tabControl.ResumeLayout(false);
             this.cameraTab.ResumeLayout(false);
-            this.pictureTab.ResumeLayout(false);
+            this.imageTab.ResumeLayout(false);
+            this.binaryImageTab.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -257,7 +257,7 @@
 
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage cameraTab;
-        private System.Windows.Forms.TabPage pictureTab;
+        private System.Windows.Forms.TabPage binaryImageTab;
         private ImageProcessingLibrary.Cameras.CameraViewControl cameraViewControl;
         private ImageProcessingLibrary.Visualization.ImagePlot imagePlot;
         private System.Windows.Forms.Button takePictureButton;
@@ -265,7 +265,7 @@
         private ImageProcessingLibrary.Cameras.CameraSetupControl cameraSetupControl;
         private System.Windows.Forms.Button toTab0Button;
         private System.Windows.Forms.Button loadImageButton;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage imageTab;
         private ImageProcessingLibrary.Visualization.ImagePlot imagePlotOrig;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
