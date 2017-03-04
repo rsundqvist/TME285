@@ -179,32 +179,62 @@ namespace FaceRecognitionApplication
 
                 //Horizontal lines
                 //Top line
-                Parallel.For(y1 * bytesPerPixel, (y1 + lineWidth/2) * bytesPerPixel, y =>
-                {
-                    byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
-                    //left
-                    for (int x = x1; x < x2; x++)
-                    {
-                        int xp = x * bytesPerPixel;
-                        currentLine[xp] = 0;
-                        currentLine[xp + 1] = 0;
-                        currentLine[xp + 2] = 255;
-                    }
-                });
+                Parallel.For(y1 * bytesPerPixel, (y1 + lineWidth / 2) * bytesPerPixel, y =>
+                  {
+                      byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
+                      //left
+                      for (int x = x1; x < x2; x++)
+                      {
+                          int xp = x * bytesPerPixel;
+                          currentLine[xp] = 0;
+                          currentLine[xp + 1] = 0;
+                          currentLine[xp + 2] = 255;
+                      }
+                  });
                 //Bottom line
-                Parallel.For((y2 - lineWidth/2) * bytesPerPixel, y2 * bytesPerPixel, y =>
-                {
-                    byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
-                    //left
-                    for (int x = x1; x < x2; x++)
-                    {
-                        int xp = x * bytesPerPixel;
-                        currentLine[xp] = 0;
-                        currentLine[xp + 1] = 0;
-                        currentLine[xp + 2] = 255;
-                    }
-                });
+                Parallel.For((y2 - lineWidth / 2) * bytesPerPixel, y2 * bytesPerPixel, y =>
+                  {
+                      byte* currentLine = ptrFirstPixel + y * bitmapData.Stride;
+                      //left
+                      for (int x = x1; x < x2; x++)
+                      {
+                          int xp = x * bytesPerPixel;
+                          currentLine[xp] = 0;
+                          currentLine[xp + 1] = 0;
+                          currentLine[xp + 2] = 255;
+                      }
+                  });
             }
+        }
+
+        public int[,] ConnectedCompontents(bool[,] binaryImage)
+        {
+            int len0 = binaryImage.GetLength(0);
+            int len1 = binaryImage.GetLength(1);
+            int[,] labels = new int[len0, len1];
+            int nextLabel = 1;
+
+            /*
+            for (int i = 0; i < len0; i++)
+                for (int j = 0; j < len1; j++)
+                    labels[i, j] = binaryImage[i, j] ? 1 : 0;
+            */
+
+            //First pass
+            for (int i = 0; i < len0; i++)
+            {
+                for (int j = 0; j < len1; j++)
+                {
+                    if (binaryImage[i, j])
+                    {
+                        //
+                    }
+                }
+            }
+
+            //Second pass
+
+            return labels;
         }
 
         public void BinaryImage(bool[,] binaryImage)
