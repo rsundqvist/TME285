@@ -238,17 +238,37 @@ namespace FaceRecognitionApplication
                         {
                             labels[i, j] = neighbours.Min();
                             foreach (int nLabel in neighbours)
-                                linked[nLabel] = uf.Union(linked[nextLabel], labels[i, j]);
+                                linked[nLabel] = uf.Union(linked[nLabel], labels[i, j]);
                         }
                     }
                 }
             }
+
+            Console.WriteLine("After pass1");
+            int[] count1 = new int[len0 * len1];
+            for (int i = 0; i < len0; i++)
+                for (int j = 0; j < len1; j++)
+                    if (binaryImage[i, j])
+                        count1[labels[i, j]]++;
+            for (int i = 0; i < count1.Length; i++)
+                if (count1[i] > 0)
+                    Console.WriteLine(i + " count1: " + count1[i]);
 
             //Second pass
             for (int i = 0; i < len0; i++)
                 for (int j = 0; j < len1; j++)
                     if (binaryImage[i, j])
                         labels[i, j] = uf.Find(labels[i, j]);
+
+            Console.WriteLine("After pass2");
+            int[] count2 = new int[len0 * len1];
+            for (int i = 0; i < len0; i++)
+                for (int j = 0; j < len1; j++)
+                    if (binaryImage[i, j])
+                        count2[labels[i, j]]++;
+            for (int i = 0; i < count2.Length; i++)
+                if (count2[i] > 0)
+                    Console.WriteLine(i + " count2: " + count2[i]);
 
             //Shameful code - please look away
             if (keepMaxOnly)
@@ -267,11 +287,10 @@ namespace FaceRecognitionApplication
                         break;
                     }
 
-                Console.WriteLine("max = " + max);
-
                 for (int i = 0; i < len0; i++)
                     for (int j = 0; j < len1; j++)
-                        binaryImage[i, j] = labels[i, j] == max;
+                        if(binaryImage[i,j])
+                            binaryImage[i, j] = labels[i, j] == max;
             }
 
 
@@ -294,7 +313,7 @@ namespace FaceRecognitionApplication
                 int ni = iValues[k];
                 int nj = jValues[k];
                 if (RangeCheck(ni, nj, labels) && binaryImage[ni, nj])
-                    neighbours.Add(labels[nj, ni]);
+                    neighbours.Add(labels[ni, nj]);
             }
 
             return neighbours;
