@@ -8,8 +8,11 @@ using System.Drawing;
 
 namespace FaceRecognitionApplication
 {
+
     class AugmentedImageProcessor : ImageProcessor
     {
+        public const short NumNeighbours = 4;
+
         public AugmentedImageProcessor(Bitmap bitmap)
             : base(bitmap)
         { }
@@ -150,7 +153,6 @@ namespace FaceRecognitionApplication
             int x2 = bounds.Item3;
             int y2 = bounds.Item4;
 
-            Console.WriteLine(bounds.ToString());
             unsafe
             {
 
@@ -207,18 +209,14 @@ namespace FaceRecognitionApplication
             }
         }
 
-        public int[,] ConnectedCompontents(bool[,] binaryImage)
+        public int[,] ConnectedComponents(bool[,] binaryImage, bool keepMaxOnly)
         {
             int len0 = binaryImage.GetLength(0);
             int len1 = binaryImage.GetLength(1);
             int[,] labels = new int[len0, len1];
-            int nextLabel = 1;
-
-            /*
-            for (int i = 0; i < len0; i++)
-                for (int j = 0; j < len1; j++)
-                    labels[i, j] = binaryImage[i, j] ? 1 : 0;
-            */
+            int[] linked = new int[len0 * len1];
+            UnionFind uf = new UnionFind(len0 * len1);
+            int nextLabel = 0;
 
             //First pass
             for (int i = 0; i < len0; i++)
@@ -227,14 +225,84 @@ namespace FaceRecognitionApplication
                 {
                     if (binaryImage[i, j])
                     {
-                        //
+                        //Console.WriteLine("(i, j) = ({0}, {1})", i, j);
+                        List<int> neighbours = FindNeighbours(i, j, labels, binaryImage, NumNeighbours);
+
+                        if (neighbours.Count == 0)
+                        {
+                            linked[nextLabel] = nextLabel;
+                            labels[i, j] = nextLabel;
+                            nextLabel++;
+                        }
+                        else
+                        {
+                            labels[i, j] = neighbours.Min();
+                            foreach (int nLabel in neighbours)
+                                linked[nLabel] = uf.Union(linked[nextLabel], labels[i, j]);
+                        }
                     }
                 }
             }
 
             //Second pass
+            for (int i = 0; i < len0; i++)
+                for (int j = 0; j < len1; j++)
+                    if (binaryImage[i, j])
+                        labels[i, j] = uf.Find(labels[i, j]);
+
+            //Shameful code - please look away
+            if (keepMaxOnly)
+            {
+                int[] count = new int[len0 * len1];
+                for (int i = 0; i < len0; i++)
+                    for (int j = 0; j < len1; j++)
+                        if (binaryImage[i, j])
+                            count[labels[i, j]]++;
+
+                int max = count.Max();
+                for (int i = 0; i < count.Length; i++)
+                    if (count[i] == max)
+                    {
+                        max = i;
+                        break;
+                    }
+
+                Console.WriteLine("max = " + max);
+
+                for (int i = 0; i < len0; i++)
+                    for (int j = 0; j < len1; j++)
+                        binaryImage[i, j] = labels[i, j] == max;
+            }
+
+
 
             return labels;
+        }
+
+        private List<int> FindNeighbours(int i, int j, int[,] labels, bool[,] binaryImage, int numNeighbours)
+        {
+            if (!(numNeighbours == 4 || numNeighbours == 8))
+                throw new Exception("numNeighbours must be 4 or 8!");
+
+            numNeighbours = numNeighbours / 2;
+            List<int> neighbours = new List<int>(numNeighbours);
+            int[] iValues = { i - 1, i, i - 1, i - 1 };
+            int[] jValues = { j, j - 1, j - 1, j + 1 };
+
+            for (int k = 0; k < numNeighbours; k++)
+            {
+                int ni = iValues[k];
+                int nj = jValues[k];
+                if (RangeCheck(ni, nj, labels) && binaryImage[ni, nj])
+                    neighbours.Add(labels[nj, ni]);
+            }
+
+            return neighbours;
+        }
+
+        public bool RangeCheck(int i, int j, int[,] labels)
+        {
+            return i >= 0 && j >= 0 && i < labels.GetLength(0) & j < labels.GetLength(1);
         }
 
         public void BinaryImage(bool[,] binaryImage)
@@ -274,6 +342,10 @@ namespace FaceRecognitionApplication
         /// <returns>Face boundries as (x1, y1, x2, y2).</returns>
         public Tuple<int, int, int, int> FindSkinPixelsChenLin()
         {
+            Console.WriteLine("CHEN LIN");
+            Console.WriteLine("CHEN LIN");
+            Console.WriteLine("CHEN LIN");
+
             unsafe
             {
                 int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
@@ -323,6 +395,7 @@ namespace FaceRecognitionApplication
             }
             bool[,] binaryImage = BinaryImage();
             Average(binaryImage, 5, 2);
+            ConnectedComponents(binaryImage, true);
             BinaryImage(binaryImage);
             return GetBoundries(binaryImage);
         }

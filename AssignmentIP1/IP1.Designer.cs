@@ -82,6 +82,7 @@
             this.loadImageButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.loadImageButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.loadImageButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loadImageButton.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.loadImageButton.Location = new System.Drawing.Point(1081, 425);
             this.loadImageButton.Name = "loadImageButton";
             this.loadImageButton.Size = new System.Drawing.Size(140, 90);
@@ -96,6 +97,7 @@
             this.takePictureButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.takePictureButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.takePictureButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.takePictureButton.ForeColor = System.Drawing.SystemColors.ActiveCaption;
             this.takePictureButton.Location = new System.Drawing.Point(1081, 521);
             this.takePictureButton.Name = "takePictureButton";
             this.takePictureButton.Size = new System.Drawing.Size(140, 90);

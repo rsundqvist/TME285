@@ -1,6 +1,6 @@
 ﻿namespace CartoonFaceApplication
 {
-    partial class Form1
+    partial class VS1
     {
         /// <summary>
         /// Required designer variable.
@@ -30,13 +30,13 @@
         {
             this.SuspendLayout();
             // 
-            // Form1
+            // VS1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(794, 435);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "VS1";
+            this.Text = "VS1";
             this.ResumeLayout(false);
 
         }
