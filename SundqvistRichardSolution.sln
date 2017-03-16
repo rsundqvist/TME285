@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentIP1", "Assignment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpeechSynthesis", "..\SpeechProcessingSolution\FormantSpeechSynthesisApplication\SpeechSynthesis.csproj", "{108FAA26-7F13-4785-AB46-66CD3D5881B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentVS1", "AssignmentVS1\CartoonFaceApplication\AssignmentVS1.csproj", "{898E4B2D-4D01-43C9-B707-6F15418D68F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentVS1", "AssignmentVS1\AssignmentVS1.csproj", "{33703D98-A9F7-499C-82C2-7118508BCC10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,14 +195,14 @@ Global
 		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Release|Any CPU.ActiveCfg = Release|x86
 		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Release|x86.ActiveCfg = Release|x86
 		{108FAA26-7F13-4785-AB46-66CD3D5881B2}.Release|x86.Build.0 = Release|x86
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Debug|x86.Build.0 = Debug|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Release|x86.ActiveCfg = Release|Any CPU
-		{898E4B2D-4D01-43C9-B707-6F15418D68F5}.Release|x86.Build.0 = Release|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Debug|x86.Build.0 = Debug|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Release|x86.ActiveCfg = Release|Any CPU
+		{33703D98-A9F7-499C-82C2-7118508BCC10}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

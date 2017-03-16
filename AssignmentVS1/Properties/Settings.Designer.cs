@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CartoonFaceApplication.Properties
+namespace VS1.Properties
 {
 
 
