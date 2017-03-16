@@ -269,7 +269,7 @@ namespace IsolatedWordRecognitionApplication
 
                 clones.Clear();
                 //NUMBER OF INDIVIDUALS
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 100; i++)
                 {
                     IsolatedWordRecognizer clone = (IsolatedWordRecognizer)ObjectXmlSerializer.ObtainSerializedObject(openFileDialog.FileName, typeof(IsolatedWordRecognizer));
                     clones.Add(clone);

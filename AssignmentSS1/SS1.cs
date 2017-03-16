@@ -13,10 +13,9 @@ namespace FormatSpeechDemo
     public partial class SS1 : Form
     {
         #region Fields
-        //private FormantSpecification soundEditorFormantSpecification = null;
-        //private FormantSettings soundEditorFormantSettings = null;
-        //private FormantSpecification ieaSelectedFormantSpecification = null;
+
         private SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+        private const string synthPath = "\\..\\..\\synth.xml";
         #endregion
 
         public SS1()
@@ -47,7 +46,7 @@ namespace FormatSpeechDemo
             {
                 string word = v as string;
                 wordList.Add(word);
-                silenceList.Add(0);
+                silenceList.Add(0.5);
             }
 
             WAVSound sentence = synthesizer.GenerateWordSequence(wordList, silenceList);
@@ -68,20 +67,24 @@ namespace FormatSpeechDemo
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     synthesizer = (SpeechSynthesizer)ObjectXmlSerializer.ObtainSerializedObject(openFileDialog.FileName, typeof(SpeechSynthesizer));
-
-                    synthesizer.SpecificationList.Sort((a, b) => a.Name.CompareTo(b.Name));
-
-                    //Load the sounds into list.
-                    sentenceBox.Items.Clear();
-                    wordBox.Items.Clear();
-
-                    foreach (var wtsm in synthesizer.WordToSoundMappingList)
-                        wordBox.Items.Add(wtsm.Word);
-
-                    speakWordButton.Enabled = true;
-                    speakSentenceButton.Enabled = true;
+                    loadSynthesizer(synthesizer);
                 }
             }
+        }
+
+        private void loadSynthesizer(SpeechSynthesizer synthesizer)
+        {
+            synthesizer.SpecificationList.Sort((a, b) => String.Compare(a.Name, b.Name, StringComparison.Ordinal));
+
+            //Load the sounds into list.
+            sentenceBox.Items.Clear();
+            wordBox.Items.Clear();
+
+            foreach (var wtsm in synthesizer.WordToSoundMappingList)
+                wordBox.Items.Add(wtsm.Word);
+
+            speakWordButton.Enabled = true;
+            speakSentenceButton.Enabled = true;
         }
 
         private void singleWord(object sender, EventArgs e)

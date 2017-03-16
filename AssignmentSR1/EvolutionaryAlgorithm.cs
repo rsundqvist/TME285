@@ -14,9 +14,9 @@ namespace IsolatedWordRecognitionApplication
     class EvolutionaryAlgorithm
     {
         #region const
-        private const int MAX_ITERATIONS = 1000;
+        private const int MAX_ITERATIONS = 10000;
         private const int SAMPLE_SIZE = 5;
-        private const double MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 20;
+        private const double MAX_GENERATIONS_WITHOUT_IMPROVEMENT = 100;
 
         private const double CREEP_RANGE = 0.1;
         private const double SQUASH_PARAMETER = 0.3;
