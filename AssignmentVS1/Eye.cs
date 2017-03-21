@@ -52,25 +52,26 @@ namespace VS1
             _lid.AmbientColor = Color.DarkSalmon;
             _lid.DiffuseColor = Color.Black;
             _lid.SpecularColor = Color.DarkSalmon;
+            _lid.Move(sgn * 0.20, 0.4, 0.7); //Same as eyeball
             _lid.Move(sgn * 0.01, 0.016, 0);
             _lid.RotateX(40);
             _lid.RotateZ(-sgn * 25);
 
             //Eyebrow - not part of eyeball
-            TorusSector3D eyeBrow = new TorusSector3D();
-            eyeBrow.Generate(new List<double>() { 0.15, 0.02, 32, 32, 0, Math.PI });
-            eyeBrow.AmbientColor = Color.DeepPink;
-            eyeBrow.DiffuseColor = Color.DeepPink;
-            eyeBrow.SpecularColor = Color.DeepPink;
-            eyeBrow.Move(sgn*0.2, 0.3, 0.8);
-            eyeBrow.RotateY(sgn*5);
-            eyeBrow.RotateX(15);
+            _eyeBrow = new TorusSector3D();
+            _eyeBrow.Generate(new List<double>() { 0.15, 0.02, 32, 32, 0, Math.PI });
+            _eyeBrow.AmbientColor = Color.DeepPink;
+            _eyeBrow.DiffuseColor = Color.DeepPink;
+            _eyeBrow.SpecularColor = Color.DeepPink;
+            _eyeBrow.Move(sgn*0.2, 0.3, 0.8);
+            _eyeBrow.RotateY(-sgn*25);
+            _eyeBrow.RotateX(15);
 
             //Setup
             Object3DList.Add(_eyeball);
-            Object3DList.Add(eyeBrow);
+            Object3DList.Add(_lid);
+            Object3DList.Add(_eyeBrow);
             _eyeball.Object3DList.Add(_iris);
-            _eyeball.Object3DList.Add(_lid);
             _iris.Object3DList.Add(_pupil);
         }
 
@@ -87,10 +88,33 @@ namespace VS1
             }
 
             //Open
-            //Close
             for (int i = 0; i < n; i++)
             {
                 _lid.RotateX(dx);
+                Thread.Sleep(SleepDuration);
+            }
+        }
+
+        public TorusSector3D GetEyebrow()
+        {
+            return _eyeBrow;
+        }
+
+        public void Look(double d, int sgn)
+        {
+            int n = (int)(0.5 * d / AnimationStepLength + 0.5);
+            double dz = 45.0 / n;
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine(i);
+                _eyeball.RotateZ(sgn*dz);
+                Thread.Sleep(SleepDuration);
+            }
+
+            Thread.Sleep(SleepDuration*100);
+            for (int i = 0; i < n; i++)
+            {
+                _eyeball.RotateZ(-sgn*dz);
                 Thread.Sleep(SleepDuration);
             }
         }

@@ -1,6 +1,6 @@
 ﻿namespace FormatSpeechDemo
 {
-    partial class SS1
+    partial class Ss1
     {
         /// <summary>
         /// Required designer variable.
@@ -48,7 +48,7 @@
             this.wordBox.Name = "wordBox";
             this.wordBox.Size = new System.Drawing.Size(333, 344);
             this.wordBox.TabIndex = 1;
-            this.wordBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.addSentenceWord);
+            this.wordBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.AddSentenceWord);
             // 
             // sentenceBox
             // 
@@ -58,7 +58,7 @@
             this.sentenceBox.Name = "sentenceBox";
             this.sentenceBox.Size = new System.Drawing.Size(333, 344);
             this.sentenceBox.TabIndex = 2;
-            this.sentenceBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.removeSentenceWord);
+            this.sentenceBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RemoveSentenceWord);
             // 
             // speakSentenceButton
             // 
@@ -70,7 +70,7 @@
             this.speakSentenceButton.TabIndex = 3;
             this.speakSentenceButton.Text = "Speak Sentence";
             this.speakSentenceButton.UseVisualStyleBackColor = true;
-            this.speakSentenceButton.Click += new System.EventHandler(this.speakSentence);
+            this.speakSentenceButton.Click += new System.EventHandler(this.SpeakSentence);
             // 
             // richTextBox1
             // 
@@ -130,7 +130,7 @@
             this.speakWordButton.TabIndex = 10;
             this.speakWordButton.Text = "Speak Word";
             this.speakWordButton.UseVisualStyleBackColor = true;
-            this.speakWordButton.Click += new System.EventHandler(this.singleWord);
+            this.speakWordButton.Click += new System.EventHandler(this.SingleWord);
             // 
             // SS1
             // 
@@ -147,7 +147,7 @@
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "SS1";
+            this.Name = "Ss1";
             this.Text = "Format Speech Synthesis - DEMO";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

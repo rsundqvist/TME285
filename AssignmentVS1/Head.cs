@@ -54,12 +54,108 @@ namespace VS1
             t.Start();
         }
 
-        private void NoLoop(double d, int shakes)
+        public void LookLeft(double d)
         {
+            Thread t1 = new Thread(() => _leftEye.Look(d, 1));
+            Thread t2 = new Thread(() => _rightEye.Look(d, 1));
+            t1.Start();
+            t2.Start();
+        }
+
+        public void LookRight(double d)
+        {
+            Thread t1 = new Thread(() => _leftEye.Look(d, -1));
+            Thread t2 = new Thread(() => _rightEye.Look(d, -1));
+            t1.Start();
+            t2.Start();
+        }
+
+        private void NoLoop(double t, int shakes)
+        {
+            int n = (int)(0.5 * t / AnimationStepLength + 0.5);
+            double dz = 90.0 / n;
+
             for (int i = 0; i < shakes; i++)
             {
-                for (j = 0; j < )
+                for (int j = 0; j < n; j++)
+                {
+                    RotateZ(dz);
+                    Thread.Sleep(SleepDuration);
+                }
+                for (int j = -n; j < n; j++)
+                {
+                    RotateZ(-dz);
+                    Thread.Sleep(SleepDuration);
+                }
+                for (int j = 0; j < n; j++)
+                {
+                    RotateZ(dz);
+                    Thread.Sleep(SleepDuration);
+                }
             }
+        }
+
+        public void Yes(double d, int shakes)
+        {
+            Thread t = new Thread(() => YesLoop(d, shakes));
+            t.Start();
+        }
+
+        private void YesLoop(double t, int shakes)
+        {
+            int n = (int)(0.5 * t / AnimationStepLength + 0.5);
+            int nUp = (int)(n * 1.3 + 0.5);
+            double dx = 45.0 / n;
+
+            for (int i = 0; i < shakes; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    RotateX(-dx);
+                    Thread.Sleep(SleepDuration);
+                }
+                for (int j = 0; j < nUp; j++)
+                {
+                    RotateX(dx);
+                    Thread.Sleep(SleepDuration);
+                }
+
+                for (int j = 0; j < nUp - n; j++)
+                {
+                    RotateX(-dx);
+                    Thread.Sleep(SleepDuration);
+                }
+            }
+        }
+
+        internal void Sad()
+        {
+            Yes(15, 1);
+            Blink(15);
+            TorusSector3D leftBrow = _leftEye.GetEyebrow();
+            TorusSector3D rightBrow = _rightEye.GetEyebrow();
+
+            Thread t = new Thread(() =>
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    leftBrow.RotateY(-0.25);
+                    rightBrow.RotateY(0.25);
+                    leftBrow.Move(-0.001, 0, 0);
+                    rightBrow.Move(0.001, 0, 0);
+                    Thread.Sleep(10);
+                }
+                Thread.Sleep(1000);
+                for (int i = 0; i < 100; i++)
+                {
+                    leftBrow.RotateY(0.25);
+                    rightBrow.RotateY(-0.25);
+                    leftBrow.Move(0.001, 0, 0);
+                    rightBrow.Move(-0.001, 0, 0);
+                    Thread.Sleep(10);
+                }
+            });
+            t.Start();
         }
     }
 }

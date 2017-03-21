@@ -3,6 +3,8 @@ using ObjectSerializerLibrary;
 using SpeechSynthesisLibrary.FormantSynthesis;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq.Expressions;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,32 +12,42 @@ using System.Windows.Forms;
 
 namespace FormatSpeechDemo
 {
-    public partial class SS1 : Form
+    public partial class Ss1 : Form
     {
         #region Fields
 
-        private SpeechSynthesizer synthesizer = new SpeechSynthesizer();
-        private const string synthPath = "\\..\\..\\synth.xml";
+        private SpeechSynthesizer _synthesizer;
+        private const string SynthPath = "\\..\\..\\ss.xml";
         #endregion
 
-        public SS1()
+        public Ss1()
         {
             InitializeComponent();
+            try
+            {
+                string applicationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+                LoadSynthesizer(applicationDirectory + SynthPath);
+            }
+            catch (Exception)
+            {
+                speakSentenceButton.Enabled = false;
+                speakWordButton.Enabled = false;
+            }
         }
 
-        private void removeSentenceWord(object sender, MouseEventArgs e)
+        private void RemoveSentenceWord(object sender, MouseEventArgs e)
         {
             int i = sentenceBox.SelectedIndex;
             sentenceBox.Items.RemoveAt(i);
         }
 
-        private void addSentenceWord(object sender, MouseEventArgs e)
+        private void AddSentenceWord(object sender, MouseEventArgs e)
         {
             var i = wordBox.SelectedItem;
             sentenceBox.Items.Add(i);
         }
 
-        private void speakSentence(object sender, EventArgs e)
+        private void SpeakSentence(object sender, EventArgs e)
         {
             if (sentenceBox.Items.Count == 0) return;
 
@@ -49,7 +61,7 @@ namespace FormatSpeechDemo
                 silenceList.Add(0.5);
             }
 
-            WAVSound sentence = synthesizer.GenerateWordSequence(wordList, silenceList);
+            WAVSound sentence = _synthesizer.GenerateWordSequence(wordList, silenceList);
 
             SoundPlayer soundPlayer = new SoundPlayer();
             sentence.GenerateMemoryStream();
@@ -64,15 +76,31 @@ namespace FormatSpeechDemo
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "xml files (*.xml)|*.xml";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    synthesizer = (SpeechSynthesizer)ObjectXmlSerializer.ObtainSerializedObject(openFileDialog.FileName, typeof(SpeechSynthesizer));
-                    loadSynthesizer(synthesizer);
-                }
+                if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+
+                LoadSynthesizer(openFileDialog.FileName);
             }
         }
 
-        private void loadSynthesizer(SpeechSynthesizer synthesizer)
+        private void LoadSynthesizer(string path)
+        {
+            try
+            {
+                _synthesizer = (SpeechSynthesizer)ObjectXmlSerializer.ObtainSerializedObject(path, typeof(SpeechSynthesizer));
+                sentenceBox.Items.Clear();
+                wordBox.Items.Clear();
+                LoadSynthesizer(_synthesizer);
+                speakSentenceButton.Enabled = true;
+                speakWordButton.Enabled = true;
+            }
+            catch (Exception)
+            {
+                speakSentenceButton.Enabled = false;
+                speakWordButton.Enabled = false;
+            }
+        }
+
+        private void LoadSynthesizer(SpeechSynthesizer synthesizer)
         {
             synthesizer.SpecificationList.Sort((a, b) => String.Compare(a.Name, b.Name, StringComparison.Ordinal));
 
@@ -87,12 +115,12 @@ namespace FormatSpeechDemo
             speakSentenceButton.Enabled = true;
         }
 
-        private void singleWord(object sender, EventArgs e)
+        private void SingleWord(object sender, EventArgs e)
         {
             var word = wordBox.SelectedItem;
             if (word != null)
             {
-                WAVSound sound = synthesizer.GenerateWord((string)word);
+                WAVSound sound = _synthesizer.GenerateWord((string)word);
 
                 SoundPlayer soundPlayer = new SoundPlayer();
                 sound.GenerateMemoryStream();

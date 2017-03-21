@@ -15,6 +15,7 @@ namespace VS1
 {
     public partial class Vs1 : Form
     {
+        private const int Multiplier = 1;
         private readonly Head _head;
         public Vs1()
         {
@@ -25,6 +26,8 @@ namespace VS1
             scene.ObjectList.Add(_head);
             viewer.Scene = scene;
             viewer.StartAnimation();
+
+            happyButton.Enabled = false; //cba
         }
 
         private Light Light()
@@ -91,11 +94,6 @@ namespace VS1
         //                        Animation                       //
         // ---- ==== ---- ==== ---- ==== ---- ==== ---- ==== ---- //
 
-        private void Reset()
-        {
-
-        }
-
         // ====================================================== //
         // Direct Control                                         // 
         // ====================================================== //
@@ -108,22 +106,25 @@ namespace VS1
         private void Yes()
         {
             Console.WriteLine("Yes");
+            _head.Yes(Multiplier*3, 3);
         }
 
         private void No()
         {
             Console.WriteLine("No");
-            _head.No(5, 3);
+            _head.No(Multiplier*3, 2);
         }
 
         private void LookLeft()
         {
             Console.WriteLine("Look Left");
+            _head.LookLeft(Multiplier*3);
         }
 
         private void LookRight()
         {
             Console.WriteLine("Look Right");
+            _head.LookRight(Multiplier*3);
         }
 
         // ====================================================== //
@@ -133,13 +134,12 @@ namespace VS1
         private void Happy()
         {
             Console.WriteLine("Happy");
-
         }
 
         private void Sad()
         {
-            Console.WriteLine("Happy");
-
+            Console.WriteLine("Sad");
+            _head.Sad();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace FormatSpeechDemo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SS1());
+            Application.Run(new Ss1());
         }
     }
 }
