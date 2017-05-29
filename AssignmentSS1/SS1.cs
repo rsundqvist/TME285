@@ -68,7 +68,7 @@ namespace FormatSpeechDemo
             sentence.WAVMemoryStream.Position = 0; // Manually rewind stream 
             soundPlayer.Stream = null; //TODO varför?
             soundPlayer.Stream = sentence.WAVMemoryStream;
-            soundPlayer.PlaySync();
+            soundPlayer.Play();
         }
 
         private void load_Click(object sender, EventArgs e)
