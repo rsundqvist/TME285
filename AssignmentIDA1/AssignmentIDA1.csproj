@@ -99,9 +99,21 @@
     <Content Include="rss.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\AudioLibrary\AudioLibrary.csproj">
+      <Project>{1253f8f6-fadd-478b-98fb-2faaf5e95d2c}</Project>
+      <Name>AudioLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\InternetDataAcquisitionLibrary\InternetDataAcquisitionLibrary.csproj">
       <Project>{c67420c1-6d52-43d1-bcca-947c7bb8a53b}</Project>
       <Name>InternetDataAcquisitionLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\ObjectSerializerLibrary\ObjectSerializerLibrary.csproj">
+      <Project>{b27a4215-2ac9-4db2-8f7f-e68de3109e23}</Project>
+      <Name>ObjectSerializerLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\SpeechSynthesisLibrary\SpeechSynthesisLibrary.csproj">
+      <Project>{e1ce5314-26e5-440a-9ad4-08f6b6ef08d6}</Project>
+      <Name>SpeechSynthesisLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

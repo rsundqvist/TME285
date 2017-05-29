@@ -108,8 +108,13 @@ namespace FormatSpeechDemo
             sentenceBox.Items.Clear();
             wordBox.Items.Clear();
 
+            int numWords = 0;
             foreach (var wtsm in synthesizer.WordToSoundMappingList)
+            {
                 wordBox.Items.Add(wtsm.Word);
+                numWords++;
+            }
+            numWordsTextbox.Text = numWords + "";
 
             speakWordButton.Enabled = true;
             speakSentenceButton.Enabled = true;

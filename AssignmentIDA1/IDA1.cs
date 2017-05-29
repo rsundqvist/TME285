@@ -1,8 +1,13 @@
 ﻿using InternetDataAcquisitionLibrary;
+using ObjectSerializerLibrary;
+using SpeechSynthesisLibrary.FormantSynthesis;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel.Syndication;
 using System.Windows.Forms;
+using System.IO;
+using System.Media;
+using AudioLibrary;
 
 namespace FancyInternetDataAcquisition
 {
@@ -16,6 +21,9 @@ namespace FancyInternetDataAcquisition
         private readonly DateTimeOffset DEFAULT_DATE_TIME_OFFSET = DateTimeOffset.MaxValue; //Not nullable
         private readonly List<string> keywordList = new List<string>();
         private readonly List<string> urlList = new List<string>();
+
+        private SpeechSynthesizer _synthesizer;
+        private const string SynthPath = "\\..\\..\\ss.xml";
         #endregion
 
         #region constructor
@@ -23,6 +31,30 @@ namespace FancyInternetDataAcquisition
         {
             InitializeComponent();
             updateSetup();
+
+            try
+            {
+                string applicationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+                LoadSynthesizer(applicationDirectory + SynthPath);
+                speechStatusBox.Text = "Speech loaded.";
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void LoadSynthesizer(string path)
+        {
+            try
+            {
+                _synthesizer = (SpeechSynthesizer)ObjectXmlSerializer.ObtainSerializedObject(path, typeof(SpeechSynthesizer));
+            }
+            catch (Exception)
+            {
+                _synthesizer = null;
+                MessageBox.Show("Failed to load speech synthesizer: " + SynthPath, "Failed to load VSS", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                speechStatusBox.Text = "Speech failed to load.";
+            }
         }
         #endregion
 
@@ -134,8 +166,25 @@ namespace FancyInternetDataAcquisition
                 }
             }
 
-            if (alertNew)
-                return; //TODO: voice alert
+            if (alertNew && _synthesizer != null)
+            {
+                List<string> wordList = new List<string>(2);
+                List<double> silenceList = new List<double>(2);
+
+                wordList.Add("new");
+                silenceList.Add(0.5);
+                wordList.Add("alert");
+                silenceList.Add(0.5);
+
+                WAVSound sentence = _synthesizer.GenerateWordSequence(wordList, silenceList);
+
+                SoundPlayer soundPlayer = new SoundPlayer();
+                sentence.GenerateMemoryStream();
+                sentence.WAVMemoryStream.Position = 0; // Manually rewind stream 
+                soundPlayer.Stream = null; //TODO varför?
+                soundPlayer.Stream = sentence.WAVMemoryStream;
+                soundPlayer.PlaySync();
+            }
         }
 
         private DateTimeOffset getLatestPublishDate(List<SyndicationItem> syndicationItemList)

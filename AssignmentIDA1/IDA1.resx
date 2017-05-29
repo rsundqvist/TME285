@@ -120,10 +120,10 @@
   <data name="rssTextbox.Text" xml:space="preserve">
     <value>http://feeds.bbci.co.uk/news/world/rss.xml
 //http://www.svt.se/nyheter/rss.xml
-http://www.aftonbladet.se/rss.xml
-http://www.svd.se/?service=rss
-http://api.sr.se/api/rss/program/4540
-http://expressen.se/rss/nyheter
-http://www.dn.se/nyheter/m/rss/</value>
+//http://www.aftonbladet.se/rss.xml
+//http://www.svd.se/?service=rss
+//http://api.sr.se/api/rss/program/4540
+//http://expressen.se/rss/nyheter
+//http://www.dn.se/nyheter/m/rss/</value>
   </data>
 </root>
